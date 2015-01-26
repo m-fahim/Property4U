@@ -1,0 +1,123 @@
+﻿@model Property4U.Models.Ad
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Ad</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AdminID, "AdminID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("AdminID", (SelectList)ViewBag.AdminIDList, String.Empty, htmlAttributes: new { @class = "form-control" /*, disabled = "disabled"*/ })
+                @Html.ValidationMessageFor(model => model.AdminID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OrderID, "OrderID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("OrderID", (SelectList)ViewBag.OrderIDList, String.Empty, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.OrderID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WebsiteURL, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.WebsiteURL, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Path, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model => model.Path, new { htmlAttributes = new { @class = "form-control" } })*@
+                <input type="file" accept="image/*" name="adFile" id="adFile" value="Choose File" class="form-control" />
+                @Html.HiddenFor(model => model.Path, new { id = "Path" })
+                <p style="font-size:small; color:#428bca;">current selected image <b>@Html.DisplayFor(model => model.Path)</b></p>
+                <a href="@Url.Content("~/Content/Uploads/Ads/" + Model.Path)"><img src="@Url.Content("~/Content/Uploads/Ads/" + Model.Path)" alt="logo" id="flexImgSize" /></a>
+                <input type="hidden" name="oldAdPath" id="oldAdPath" value="@Html.DisplayFor(model => model.Path)" />
+                @Html.HiddenFor(model => model.ImageSize, new { id = "ImageSize" })
+                @Html.ValidationMessageFor(model => model.Path, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AdDuration, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.AdDuration, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AdDuration, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.AdStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.AdStatus, null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AdStatus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Remedies, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Remedies, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Remedies, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostedOn, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PostedOn, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.PostedOn, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.LastEdit, htmlAttributes: new {  @Value = ViewBag.LastEdit } )
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+            jQuery('#adFile').change('input propertychange paste', function () {
+                $("#Path").val($(this).val());
+            });
+    </script>
+}

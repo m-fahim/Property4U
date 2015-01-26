@@ -1,0 +1,94 @@
+﻿@model IEnumerable<Property4U.Models.Feedback>
+
+@{
+    var param = (Request.Params["reportAbuse"] != null) ? Request.Params["reportAbuse"].Equals("True") : false;
+    ViewBag.Title = (param) ? "Flags" : "Feedbacks";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<p>
+    @if (User.IsInRole("Member"))
+    {
+        @Html.ActionLink("Create New", "Create", new { reportAbuse = Request.Params["reportAbuse"] })
+    }
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PropertyID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.For)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        @if (!param)
+        {
+            <th>
+                @Html.DisplayNameFor(model => model.AgentRating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AgentReview)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OverallExperience)
+            </th>
+        }
+        <th>
+            @Html.DisplayNameFor(model => model.FeedbackOn)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Properties.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.For)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        @if (item.For.ToString().Equals("Process_Feedback"))
+        {
+            <td>
+                @Html.DisplayFor(modelItem => item.AgentRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AgentReview)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OverallExperience)
+            </td>
+        }
+        <td>
+            @Html.DisplayFor(modelItem => item.FeedbackOn)
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |*@
+            @Html.ActionLink("Details", "Details", new { id = item.ID, reportAbuse = Request.Params["reportAbuse"] })
+            @if (User.IsInRole("Member"))
+            {
+                 @("| ") @Html.ActionLink("Delete", "Delete", new { id = item.ID, reportAbuse = Request.Params["reportAbuse"] })
+            }
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,214 @@
+﻿@model Property4U.Models.Address
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>Address</h4>
+    <hr />
+
+    <div class="row">
+        <div id="map_canvas" style="width:100%; height:200px; margin-bottom:10px;" class="col-md-10"></div>
+    </div>
+    
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Floor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Floor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Block)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Block)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Street)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Street)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.City)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.City)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.State)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.State)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Country)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostalCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostalCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Latitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Latitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Longitude)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Longitude)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+@section scripts{
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        initialize();
+
+        jQuery('input').change('input propertychange paste', function () {
+            var geocoder = new google.maps.Geocoder();
+            var address = $("#Number").val() + ", , " + $("#Street").val() + ", , " + $("#City").val() + ", " + $("#State").val() + ", " + $("#ZipCode").val() + ", " + $("#Country").val();
+
+            geocoder.geocode({ 'address': address }, function (results, status) {
+
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var latitude = results[0].geometry.location.lat();
+                    var longitude = results[0].geometry.location.lng();
+                    $("#Latitude").val(latitude);
+                    $("#Longitude").val(longitude);
+                }
+            });
+        });
+
+    });
+    function initialize() {
+        var mapOptions = {
+            center: new google.maps.LatLng('@Model.Latitude', '@Model.Longitude'),
+            zoom: 10,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"),
+      mapOptions);
+        // create a marker
+        var propertyLat = '@Model.Latitude';
+        var propertyLong = '@Model.Longitude';
+        var latlng = new google.maps.LatLng(propertyLat, propertyLong);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            title: 'Property Address'
+        });
+
+        //var infowindow = new google.maps.InfoWindow();
+        //var service = new google.maps.places.PlacesService(map);
+
+        //service.getDetails(request, function (place, status) {
+        //    if (status == google.maps.places.PlacesServiceStatus.OK) {
+        //        var marker = new google.maps.Marker({
+        //            map: map,
+        //            position: place.geometry.location
+        //        });
+        //        google.maps.event.addListener(marker, 'click', function () {
+        //            infowindow.setContent(place.name);
+        //            infowindow.open(map, this);
+        //        });
+        //    }
+        //});
+
+        google.maps.event.addListener(map, 'click', function (event) {
+            alert("Latitude: " + event.latLng.lat() + " " + ", longitude: " + event.latLng.lng());
+            map.setCenter(marker.getPosition());
+        });
+
+    }
+    </script>
+}

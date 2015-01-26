@@ -1,0 +1,78 @@
+﻿@model Property4U.Models.Response
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Reponse</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AgentID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RequestID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Request.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResponseOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResponseOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResponseStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResponseStatus)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

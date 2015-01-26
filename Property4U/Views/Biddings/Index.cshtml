@@ -1,0 +1,137 @@
+﻿@model Property4U.ViewModels.BiddingIndexData
+
+@{
+    ViewBag.Title = "Biddings";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            <label>PropertyID</label>
+        </th>
+        <th>
+            <label>Title</label>
+        </th>
+        <th>
+            <label>StartDate</label>
+        </th>
+        <th>
+            <label>EndDate</label>
+        </th>
+        <th>
+            <label>MinExp</label>
+        </th>
+        <th>
+            <label>MaxExp</label>
+        </th>
+        <th>
+            <label>WinningBid</label>
+        </th>
+        <th>
+            <label>PostedOn</label>
+        </th>
+        <th>
+            <label>BiddingStatus</label>
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model.Biddings)
+{
+    string selectedRow = "";
+    if (item.ID == ViewBag.BiddingID)
+    {
+        selectedRow = "success";
+    }
+    <tr class="@selectedRow">
+        <td>@Html.ActionLink("Bids", "Index", new { id = item.ID })</td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Property.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MinExp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MaxExp)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WinningBid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PostedOn)
+        </td>
+        <td>
+            <span class="progress status-@item.BiddingStatus">
+                @Html.DisplayFor(modelItem => item.BiddingStatus)
+            </span>
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+
+@if (Model.Bids != null)
+{
+    <h3>
+        Bids Placed on Selected Bidding
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>BidOn</th>
+            <th>BidStatus</th>
+
+        </tr>
+        @foreach (var item in Model.Bids)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BidOn)
+                </td>
+                <td>
+                    <span class="progress status-@item.BidStatus">
+                        @Html.DisplayFor(modelItem => item.BidStatus)
+                    </span>
+                </td>
+            </tr>
+        }
+    </table>
+    <br />
+}

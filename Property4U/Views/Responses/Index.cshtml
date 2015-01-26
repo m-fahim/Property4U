@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Property4U.Models.Response>
+
+@{
+    ViewBag.Title = "Responses";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@if (Request.IsAuthenticated && User.IsInRole("Agent"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequestID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResponseOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ResponseStatus)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Request.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ResponseOn)
+        </td>
+        <td>
+            <span class="progress status-@item.ResponseStatus">
+                @Html.DisplayFor(modelItem => item.ResponseStatus)
+            </span>
+        </td>
+        <td>
+            @if (Request.IsAuthenticated && User.IsInRole("Agent"))
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) @(" | ")
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }) @(" | ")
+            }
+            @Html.ActionLink("Details", "Details", new { id = item.ID })
+        </td>
+</tr>
+}
+
+</table>

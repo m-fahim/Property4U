@@ -1,0 +1,230 @@
+﻿@model Property4U.Models.BiddingsPropertyPhotoViewModel
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+@{
+    ViewBag.Title = "Biddings";
+}
+
+<section id="advertisement">
+    <div class="container">
+        <div id="topad">
+            <a href="">
+                <img src="" alt="advertisement">
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="@Settings.ThemeColor">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-12 padding-right">
+                <div class="features_items">
+                    <!--features_items-->
+                    <h2 class="title @Settings.ThemeColor text-center">Biddings</h2>
+
+                                        <div class="row">
+                                            @using (Html.BeginForm("Biddings", "FrontEnd", FormMethod.Get))
+                                            {
+                                             <div class="col-xs-10 col-xs-offset-0 col-sm-8 col-sm-offset-2 col-md-2 col-md-offset-0" style="padding-bottom:5px;">
+                                                 <div class="search_box pull-right">
+                                                     @Html.TextBox("SearchBidding", ViewBag.CurrentFilter as string, new { @Class = "form-control", @Placeholder = "Biddings" })
+
+                                                 </div>
+                                             </div>
+                                            }
+                                             <div class="col-xs-10 col-xs-offset-0 col-sm-8 col-sm-offset-2 col-md-2 col-md-offset-0" style="padding-bottom:5px;">
+                                                 <select id="sortBiddings">
+                                                     <option value="" selected="selected">Sort Biddings</option>
+                                                     <option value="1">Type</option>
+                                                     <option value="2">Price</option>
+                                                     <option value="3">Date</option>
+                                                 </select>
+                                             </div>
+                                            <div class="col-xs-10 col-xs-offset-0 col-sm-8 col-sm-offset-2 col-md-2 col-md-offset-0" style="padding-bottom:5px;">
+                                                <select id="statusBiddings">
+                                                    <option value="" selected="selected">Status</option>
+                                                    <option value="1">Active</option>
+                                                    <option value="2">Closed</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-xs-10 col-xs-offset-0 col-sm-8 col-sm-offset-2 col-md-2 col-md-offset-0" style="padding-bottom:30px;">
+                                                <div class="btn-group">
+
+                                                    <a href="@Url.Action("Biddings", "FrontEnd", new { propertyView = "List", sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, status = ViewBag.CurrentStatus })" id="list" class="btn btn-default btn-sm">
+                                                        <span class="glyphicon glyphicon-th-list">
+
+                                                        </span>List
+                                                    </a> <a href="@Url.Action("Biddings", "FrontEnd", new { propertyView = "Grid", sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, status = ViewBag.CurrentStatus })" id="grid" class="btn btn-default btn-sm">
+                                                        <span class="glyphicon glyphicon-th"></span>Grid
+                                                    </a>
+
+                                                </div>
+                                            </div>
+                                             </div>
+
+                                        @foreach (var item in Model.BiddingsPhotoPaged)
+                                        {
+                                            <div class="col-sm-3 products list-view" id="WishlistBID-@item.Bidding.ID">
+
+                                                <div class="product-image-wrapper">
+                                                    <div class="single-products">
+                                                        <div class="productinfo @Settings.ThemeColor text-center product">
+                                                            <div class="image">
+                                                                @if (item.Photo != null)
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Bidding.Title)" />
+                                                                }
+
+                                                                @if (item.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                                                {
+                                                                    <div class="promotion">
+                                                                        <span class="status status-@item.Bidding.BiddingStatus.ToString()">@item.Bidding.BiddingStatus.ToString()</span>
+                                                                    </div>
+                                                                }
+                                                            </div>
+                                                            <div class="description">
+                                                                <h2 class="pro-price">@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                                <p><i class="fa fa-map-marker"></i> @Html.DisplayFor(modelItem => item.Property.Address.City)</p>
+                                                                @if (item.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                                                {
+                                                                    <p class="active-until status-Closed">@Html.DisplayFor(modelItem => item.Bidding.EndDate)</p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p class="active-until">@Html.DisplayFor(modelItem => item.Bidding.EndDate)</p>
+                                                                }
+                                                                <a href="@Url.Action("PlaceBid", "FrontEnd", new { BID = @item.Bidding.ID })" class="btn btn-default add-to-cart">
+                                                                    <i class="fa fa-bullhorn"></i>
+                                                                    @{
+                                            if (item.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                            {
+                                                @("Details");
+                                            }
+                                            else
+                                            {
+                                                @("Place Bid");
+                                            }
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="core-features clearfix">
+                                                            <span class="area"><strong>@item.Property.AreaMeasurement</strong>Area</span>
+                                                            @if (!item.Property.OfType.Title.Equals("Land"))
+                                                            {
+                                                                <span class="baths"><strong>@item.Property.Baths</strong>Baths</span>
+                                                                <span class="beds"><strong>@item.Property.NumberOfRooms</strong>Beds</span>
+                                                                <span class="parking"><strong>@item.Property.CarSpaces</strong>Parking</span>
+                                                            }
+                                                        </div>
+                                                        @*<div class="product-overlay">
+                                                                <div class="overlay-content">
+                                                                    <h2>@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                    <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                                </div>
+                                                            </div>*@
+                                                    </div>
+                                                    <div class="@Settings.ThemeColor choose">
+                                                        <ul class="nav nav-pills nav-justified">
+                                                            <li><a href="#WishlistBID-@item.Bidding.ID" class="addToWishlist" data-pid="@("22"+item.Bidding.ID)"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+
+                                    </div><!--features_items-->
+                @*Page @(Model.PropertyPhotoFilterable.PageCount < Model.PropertyPhotoFilterable.PageNumber ? 0 : Model.PropertyPhotoFilterable.PageNumber) of @Model.PropertyPhotoFilterable.PageCount*@
+
+                @Html.PagedListPager(Model.BiddingsPhotoPaged, page => Url.Action("Biddings",
+                                                                                     new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, propertView = ViewBag.CurrentView, status = ViewBag.CurrentStatus }))
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+<script type="text/javascript" src="~/Scripts/AdsScriptTopBar.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#list').click(function (event) {
+            event.preventDefault(); $('.products').addClass('list-view');
+            window.location.replace =
+    '@Url.Action("Biddings", "FrontEnd", new { propertyView = "List", sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, status = ViewBag.CurrentStatus })';
+        });
+        $('#grid').click(function (event) {
+            event.preventDefault(); $('.products').removeClass('list-view');
+            window.location.replace =
+    '@Url.Action("Biddings", "FrontEnd", new { propertyView = "Grid", sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, status = ViewBag.CurrentStatus })';
+        });
+
+        /* Set sortBiddings with selected sort value */
+        if ('@ViewBag.CurrentSort' != "") {
+            $("#sortBiddings option:contains(@ViewBag.CurrentSort)").attr('selected', 'selected');
+        }
+
+        if ('@ViewBag.CurrentStatus' != "") {
+            $("#statusBiddings option:contains(@ViewBag.CurrentStatus)").attr('selected', 'selected');
+        }
+
+        if ($.trim('@ViewBag.CurrentView') == 'Grid')
+
+            $('.products').removeClass('list-view');
+
+        else
+
+            $('.products').addClass('list-view');
+
+    });
+
+    $('#sortBiddings').change(function (e) {
+        e.preventDefault();
+        window.location.replace = ($('option:selected', this).text() == 'Sort Biddings') ?
+            '@Url.Action("Biddings", "FrontEnd", new { currentFilter = ViewBag.CurrentFilter, propertView = ViewBag.CurrentView, status = ViewBag.CurrentStatus })'
+        :
+            '@Url.Action("Biddings","FrontEnd")' + '?sortOrder=' + $('option:selected', this).text() + '@if(ViewBag.CurrentFilter!=null){@("&currentFilter=" + @ViewBag.CurrentFilter)}@if (ViewBag.CurrentView != null){@("&propertyView=" + @ViewBag.CurrentView)}@if (ViewBag.CurrentStatus != null){@("&status="+@ViewBag.CurrentStatus)}';
+    });
+
+    $('#statusBiddings').change(function (e) {
+        e.preventDefault();
+        window.location.replace = ($('option:selected', this).text() == 'Status') ?
+            '@Url.Action("Biddings", "FrontEnd", new { sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter, propertView = ViewBag.CurrentView })'
+        :
+            '@Url.Action("Biddings","FrontEnd")' + '?status=' + $('option:selected', this).text() + '@if(ViewBag.CurrentFilter!=null){@("&currentFilter=" + @ViewBag.CurrentFilter)}@if (ViewBag.CurrentView != null){@("&propertyView=" + @ViewBag.CurrentView)}@if (ViewBag.CurrentSort != null){@("&sortOrder=" + @ViewBag.CurrentSort)}';
+    });
+
+</script>
+}

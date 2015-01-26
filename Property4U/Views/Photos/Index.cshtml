@@ -1,0 +1,119 @@
+﻿@model IEnumerable<Property4U.Models.Photo> 
+@*@helper Truncate(string input, int length)
+ {
+    if (input.Length <= length) {
+        @input
+    } else {
+        @input.Substring(0, length)<text>...</text>
+    }
+}*@
+@helper  ConvertBytes(string IBytes)
+{
+    
+    double IBytesI = Convert.ToDouble(IBytes);
+    string sSize = string.Empty;
+
+    if (IBytesI >= 1073741824){
+        @(String.Format("{0:##.##}", IBytesI / 1073741824) + " GB");
+    }else if (IBytesI >= 1048576){
+        @(String.Format("{0:##.##}", IBytesI / 1048576) + " MB");
+    }else if (IBytesI >= 1024){
+         @(String.Format("{0:##.##}", IBytesI / 1024) + " KB");
+    }else if (IBytesI > 0 && IBytesI < 1024) {
+        @(IBytes.ToString() + " bytes");
+    }
+}
+
+@{
+    ViewBag.Title = "Photos";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            <label>Image</label>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PropertyID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PhotoTitle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AltText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Caption)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.UploadedFrom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UploadedTo)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.Size)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Extension)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UploadedOn)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <a href="@Url.Content("~/Content/Uploads/Properties/"+item.PhotoTitle)"><img src="@Url.Content("~/Content/Uploads/Properties/"+item.PhotoTitle)" alt="Image" id="flexImgThumb" /></a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Property.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PhotoTitle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AltText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Caption)
+        </td>
+        @*<td>
+            @Truncate(item.UploadedFrom, 20)
+        </td>
+        <td>
+            @Truncate(item.UploadedTo, 20)
+        </td>*@
+        <td>
+        @if(item.Size !=null){
+            @ConvertBytes(item.Size.ToString())
+        }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Extension)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UploadedOn)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,131 @@
+﻿@model Property4U.Models.Photo
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@helper  ConvertBytes(string IBytes)
+{
+
+    double IBytesI = Convert.ToDouble(IBytes);
+    string sSize = string.Empty;
+
+    if (IBytesI >= 1073741824)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1073741824) + " GB");
+    }
+    else if (IBytesI >= 1048576)
+    {
+        @(String.Format("{0:D}", IBytesI / 1048576) + " MB");
+    }
+    else if (IBytesI >= 1024)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1024) + " KB");
+    }
+    else if (IBytesI > 0 && IBytesI < 1024)
+    {
+        @(IBytes.ToString() + " bytes");
+    }
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>Photo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Property.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhotoTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PhotoTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AltText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AltText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Caption)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Caption)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UploadedFrom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UploadedFrom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UploadedTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UploadedTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Size)
+        </dt>
+
+        <dd>
+            @if (Model.Size != null)
+            {
+                @ConvertBytes(Model.Size.ToString())
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Extension)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Extension)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UploadedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UploadedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,347 @@
+﻿
+/*====================================
+ Free To Use For Personal And Commercial Usage
+Author: http://binarytheme.com
+ Share Us if You Like our work 
+ Enjoy Our Codes For Free always.
+======================================*/
+
+/* user image section */
+.user-section {
+    margin-top: 20px;
+    font-size: 22px;
+    /* Change Color P4U */
+    /*background-color: whiteSmoke;*/
+    /*background-color:rgba(255, 255, 255, 0.55);*/
+    background-color: whitesmoke;
+    border-top: 5px solid #e4e4e4;
+}
+
+.user-section-inner {
+    height: 65px;
+    width: 65px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    overflow: hidden;
+    display: inline-block;
+    float: left;
+    margin-right: 15px;
+    margin-top: 20px;
+}
+
+    .user-section-inner img {
+        margin-left: 10px;
+        width: 55px;
+        height: 60px;
+    }
+
+.user-info {
+    display: block;
+    /* Change Color P4U */
+    /*color:lightslategray !important;*/
+    color: gray !important;
+    display: inline-block;
+    padding: 15px;
+    margin-bottom: 0px;
+    /* Change Color P4U */
+    /*background-color: whiteSmoke;*/
+}
+
+.user-text-online {
+    font-size: 18px;
+    /* Change Color P4U */
+    color: #4285f4;
+    /*color:white*/
+}
+
+.user-circle-online {
+    width: 15px !important;
+    height: 15px !important;
+}
+
+/* side-menu section */
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: rgba(74, 72, 126, 0);
+}
+
+/* Change menu sign-in dropdown P4U */
+#profileDropD {
+    margin: auto 0px;
+}
+
+    #profileDropD li {
+        display: block !important;
+        float: none;
+    }
+
+    #profileDropD > li > a {
+        display: block !important;
+    }
+
+        #profileDropD > li > a:focus, #profileDropD > li > a:hover {
+            color: white !important;
+            background-color: #428bca !important;
+            text-decoration: none;
+        }
+
+.navbar-top-links .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: rgba(255, 255, 255, 0.51);
+}
+
+.navbar-top-links > li > a {
+    color: #FFFFFF;
+}
+
+.nav > li > a {
+    padding: 20px 15px;
+}
+/*#side-menu {*/
+/* Change Color P4U */
+/*background-color:#4285f4;
+}*/
+
+/* Theme Color P4U */
+#side-menu.Teal {
+    background-color: #008299;
+}
+
+#side-menu.Blue {
+    background-color: #4285f4;
+}
+
+#side-menu.Purple {
+    background-color: #944e98;
+}
+
+#side-menu.Gray {
+    background-color: gray;
+}
+
+#side-menu.Red {
+    background-color: #d34836;
+}
+
+#side-menu.Orange {
+    background-color: #ef9244;
+}
+
+#side-menu.Green {
+    background-color: #25ae5c;
+}
+
+#side-menu.SkyBlue {
+    background-color: #338fff;
+}
+
+#side-menu a {
+    color: #fff;
+    border-bottom: 1px solid rgba(228, 228, 228, 0.20) !important;
+    height: 55px;
+}
+
+.selected {
+    background-color: rgb(83, 163, 163);
+}
+/* back colors */
+.blue {
+    background-color: rgb(113, 159, 241);
+}
+
+.green {
+    background-color: rgb(144, 236, 192);
+}
+
+.red {
+    background-color: rgb(255, 102, 133);
+}
+
+.yellow {
+    background-color: rgb(237, 253, 46);
+}
+
+/* No border */
+.no-boder {
+    border: 0px solid #5bc0de !important;
+}
+/* tap nvbar Section */
+
+/*/*#navbar {*/
+/* Change Color P4U */
+/*background-color:#4285f4;*/
+/*}*/
+
+/* Theme Color P4U */
+#navbar.Teal, #navbar-visiter.Teal {
+    background-color: #008299;
+}
+
+#navbar.Blue, #navbar-visiter.Blue {
+    background-color: #4285f4;
+}
+
+#navbar.Purple, #navbar-visiter.Purple {
+    background-color: #944e98;
+}
+
+#navbar.Gray, #navbar-visiter.Gray {
+    background-color: gray;
+}
+
+#navbar.Red, #navbar-visiter.Red {
+    background-color: #d34836;
+}
+
+#navbar.Orange, #navbar-visiter.Orange {
+    background-color: #ef9244;
+}
+
+#navbar.Green, #navbar-visiter.Green {
+    background-color: #25ae5c;
+}
+
+#navbar.SkyBlue, #navbar-visiter.SkyBlue {
+    background-color: #338fff;
+}
+
+
+#navbar-visiter {
+    /* Change Color P4U */
+    background-color: #4285f4;
+    border: 0;
+}
+
+    #navbar-visiter a {
+        color: whitesmoke;
+    }
+
+    #navbar-visiter > li > a:hover, #navbar-visiter > li > a:focus {
+        color: white;
+    }
+
+.navbar-brand {
+    padding-left: 20px;
+}
+
+    .navbar-brand img {
+        height: 30px;
+    }
+
+.top-label {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    margin-top: -24px;
+    margin-right: -24px;
+}
+
+/*large font*/
+.large-font {
+    font-size: 18px;
+}
+
+.body-Login-back {
+    background-color: #84B899;
+}
+
+.margin-tips {
+    margin: 5px;
+}
+
+.navbar-default {
+    /*border-color: #27A6BE;*/
+    border: none;
+}
+
+#page-wrapper {
+    padding-bottom: 50px !important;
+    /*margin-bottom:30px;*/
+}
+
+/*media queries*/
+
+@media(min-width:768px) {
+    #page-wrapper {
+        position: inherit;
+        margin: 0 0 0 250px;
+        padding: 0 30px;
+        /*min-height: 1000px;*/
+    }
+}
+
+@media(max-width:768px) {
+    #wrapper {
+        margin-top: 140px !important;
+    }
+}
+
+/* Control .navbar-toggle color */
+@media(max-width:768px) {
+    .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus{
+        background-color: #ffffff;
+    }
+    .navbar-toggle {
+        background-color: #f2f2f2;
+    }
+}
+
+/* Property4U Logo */
+.company-logo-text {
+    font-weight: bolder;
+    color: white;
+    font-size: 23.5px;
+    margin-bottom: 0;
+    text-transform: uppercase;
+    width:160px;
+    line-height:30px;
+}
+
+
+.sample .productinfo img{
+  width: 100%;
+  max-width: 400px;
+  opacity: 0.7;
+}
+
+.sample .choose {
+  border-top: 1px solid #F7F7F0;
+}
+
+.sample .choose ul li a {
+  color: gray;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  padding-left: 0;
+  padding-right: 0;
+  border : 1px solid #eeeeee;
+}
+
+.sample .choose ul li a i{
+	margin-right:5px;
+}
+
+.sample .choose ul li a:hover{
+    color: white;
+    background-color: #9c9c9c;
+    font-weight : bold;
+    border-radius: 0;
+}
+
+.heading-padding {
+    padding : 5px 10px;
+}
+
+/* Chat User Role Box */ 
+.chatRole {
+    font-size: 80px;
+    overflow: hidden;
+    color: white;
+    max-height: 70px;
+    max-width: 66%;
+    /* Text Selection None */ 
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+    cursor: default;
+}

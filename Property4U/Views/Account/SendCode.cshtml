@@ -1,0 +1,27 @@
+﻿@model IdentitySample.Models.SendCodeViewModel
+@{
+    ViewBag.Title = "Send Verification Code";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@using (Html.BeginForm("SendCode", "Account", new { ReturnUrl = Model.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" })) {
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-8">
+            Two Factor Authentication Provider:
+            @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers)
+            <input type="submit" value="Submit" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

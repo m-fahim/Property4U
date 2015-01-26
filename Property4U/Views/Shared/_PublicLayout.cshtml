@@ -1,0 +1,430 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    IEnumerable<IdentitySample.Models.ApplicationUser> TopAgents = null;
+    IEnumerable<Property4U.Models.OfType> MenuPropertyTypes = null;
+    IEnumerable<Property4U.Models.HomeForViewModel> MenuPropertyTypesWithCount = null;
+    if (dbo.Database.Exists())
+    {
+        try {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+            TopAgents = Property4U.Core.HeaderFooterContent.TopAgentsVM;
+            MenuPropertyTypes = Property4U.Core.HeaderFooterContent.MenuPropertyTypesVM;
+            MenuPropertyTypesWithCount = Property4U.Core.HeaderFooterContent.MenuPropertyTypesWithCountVM;
+        }
+        catch (Exception) {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error"); 
+        }
+    }
+    bool allow = (Settings == null)? false: true;
+}
+
+    <!DOCTYPE HTML>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="@if (allow){ @Settings.CompanyDescription; } else {  @("Property4U - Open Real Estate Solution") }">
+        <meta name="keywords" content="@if (allow){ @Settings.Keywords; } else {  @("quickly configurable, real estate 2.0, real estate bidding 2.0") }">
+        <meta name="author" content="@if (allow){ @Settings.WebsiteURL; } else {  @("www.property4u.com.pk") }">
+        <title>@ViewBag.Title - @if (allow){ @Settings.CompanyName; } else {  @("Property4U") }</title>
+        <link rel="shortcut icon" type="image/ico" href="@if (allow){ @Url.Content("~/Content/Uploads/Assets/" + @Settings.Favicon)} else { @Url.Content("~/Content/Uploads/Assets/P4U_favicon.png") }">
+        @Styles.Render("~/Content/bootstrapCSS")
+        @Styles.Render("~/Content/frontendFont")
+        @Styles.Render("~/Content/frontendCSS")
+        @Styles.Render("~/Content/font-awesome")
+        @Styles.Render("~/Content/commonCSS")
+        @Scripts.Render("~/bundles/modernizr")
+
+        @*<!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">*@
+
+
+    </head>
+    <body>
+            @*<div class="navbar navbar-default navbar-fixed-top" id="navbar-visiter">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="@Url.Action("Index", "FrontEnd")">
+                            @if (allow)
+                            {
+                                <img src="@Url.Content("~/Content/Uploads/Assets/" + Settings.LogoPath)" width="160" height="20" alt="@Settings.ShortTitle" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Uploads/Assets/P4U_logo.png")" width="160" height="20" alt="P4U" />
+                            }
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Home", "Index", "FrontEnd")</li>
+                            <li>@Html.ActionLink("About", "About", "FrontEnd")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "FrontEnd")</li>
+                        </ul>
+                        @Html.Partial("_LoginPartial")
+                    </div>
+                </div>
+            </div>
+            <div class="container body-content" id="page-content">
+                @RenderBody()
+                <hr />
+
+            </div>*@
+            @*<div class="row">
+                <footer id="footer">
+                    <p id="copyright">&copy; @DateTime.Now.Year - @if (allow){ @Settings.CompanyName; } else { @("Property4U") }</p>
+                    <p id="powered-by">Powered by <b>Property4U</b></p>
+                </footer>
+            </div>*@
+            @*<div class="footer" id="foot">
+                <div class="container">
+                    <p id="copyright">
+                        &copy; @DateTime.Now.Year - @if (allow)
+                        { @Settings.CompanyName;
+                        }
+                        else
+                        { @("Property4U") }
+                    </p>
+                    <p id="powered-by">Powered by <b>Property4U</b></p>
+                </div>
+            </div>*@
+         <!-- end wrapper -->
+
+        <header id="header">
+            <!--header-->
+            <div class="header_top">
+                <!--header_top-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="contactinfo">
+                                <ul class="nav nav-pills">
+                                    <li><a href="#" class="clear-padding-nav-a"><i class="fa fa-phone"></i> @if (allow) { @Settings.PublicPhoneNo }</a></li>
+                                    <li><a href="#" class="clear-padding-nav-a"><i class="fa fa-envelope"></i> @if (allow) { @Settings.Email }</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="social-icons pull-right">
+                                <ul class="nav navbar-nav">
+                                @if (allow) {
+                                    if (@Settings.FacebookURL != null)
+                                    {
+                                        <li><a href="@Settings.FacebookURL"><i class="fa fa-Facebook"></i></a></li>
+                                    }
+                                    if (@Settings.TwitterURL != null)
+                                    {
+                                        <li><a href="@Settings.TwitterURL"><i class="fa fa-twitter"></i></a></li>
+                                    }
+                                    if (@Settings.LinkedInURL != null)
+                                    {
+                                        <li><a href="@Settings.LinkedInURL"><i class="fa fa-linkedin"></i></a></li>
+                                    }
+                                    if (@Settings.DribbbleURL != null)
+                                    {
+                                        <li><a href="@Settings.DribbbleURL"><i class="fa fa-dribbble"></i></a></li>
+                                    }
+                                    if (@Settings.GooglePlusURL != null)
+                                    {
+                                        <li><a href="@Settings.GooglePlusURL"><i class="fa fa-Google"></i></a></li>
+                                    }
+                                }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--/header_top-->
+
+            <div class="header-middle">
+                <!--header-middle-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="logo pull-left">
+                                <a href="@Url.Action("Index", "FrontEnd")"><img class="company-logo" src="@Url.Content("~/Content/Uploads/Assets/" + Settings.LogoPath)" alt="@Settings.ShortTitle" /></a>
+                            </div>
+                            <div class="btn-group @Settings.ThemeColor pull-right">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle usa" disabled="disabled" data-toggle="dropdown">
+                                        USA
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Canada</a></li>
+                                        <li><a href="#">UK</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-default dropdown-toggle usa" disabled="disabled" data-toggle="dropdown">
+                                        DOLLAR
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Canadian Dollar</a></li>
+                                        <li><a href="#">Pound</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="shop-menu @Settings.ThemeColor pull-right">
+                                <ul class="nav navbar-nav">
+                                    <li>
+                                        @if(!Request.IsAuthenticated){
+                                            <a href="@Url.Action("Register","Account")"><i class="fa fa-user"></i> Account</a>
+                                        }
+                                        else {
+                                            <a href="@Url.Action("Index","ControlDesk")"><i class="fa fa-dashboard"></i> Control Desk</a>
+                                        }
+                                    </li>
+                                    <li>
+                                        @using (Html.BeginForm("Wishlist", "FrontEnd"@*, new { WishlistSection = "properties" }*@, FormMethod.Get, new { @id = "Wishlist" }))
+                                        {
+                                            <input type="hidden" id="WishlistItems" name="WishlistItems" value="" /><input type="hidden" id="WishlistSection" name="WishlistSection" value="properties" />
+                                            <a href="#" onclick="document.getElementById('Wishlist').submit();"><i class="fa fa-star"></i> Wishlist <span id="totalWishlistItems"></span></a>
+
+                                        }
+                                    </li>
+                                    <li>
+                                        @using (Html.BeginForm("Comparison", "FrontEnd", FormMethod.Get, new { @id = "Comparelist" }))
+                                        {   
+                                            <input type="hidden" id="ComparelistItems" name="ComparelistItems" value="" /><a href="#" onclick="document.getElementById('Comparelist').submit();"><i class="fa fa-plus-square"></i> Compare <span id="totalComparelistItems"></span></a>
+                                        }
+                                    </li>
+                                    <li>
+                                        @if(!Request.IsAuthenticated){
+                                            <a href="@Url.Action("Login","Account")"><i class="fa fa-lock"></i> Login</a>
+                                        }
+                                        else { 
+                                            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" })) 
+                                            {
+                                                @Html.AntiForgeryToken()
+
+                                                <ul class="nav navbar-nav navbar-right" @if (!User.IsInRole("Developer")){@("id='profileDropD'");}>
+                                                    <li>
+                                                        <a href="@Url.Action( "Index", "Manage", new { title = "Manage" })"><i class="fa fa-gear"></i>@User.Identity.GetUserName()</a>
+                                                     </li>
+                                                    <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-unlock"></i> Log off</a></li>
+                                                </ul>
+                                            }
+                                        }
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!--/header-middle-->
+
+            <div class="header-bottom">
+                <!--header-bottom-->
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+                            <div class="mainmenu @Settings.ThemeColor pull-left">
+                                <ul class="nav navbar-nav @Settings.ThemeColor collapse navbar-collapse">
+                                    <li><a href="@Url.Action("Index", "FrontEnd")" @*class="active"*@>Home</a></li>
+                                    <li class="dropdown">
+                                        <a href="#">Biddings<i class="fa fa-angle-down"></i></a>
+                                        <ul role="menu" class="sub-menu">
+                                            <li><a href="@Url.Action("Biddings", "FrontEnd", new { status = "Active" } )">Active</a></li>
+                                            <li><a href="@Url.Action("Biddings", "FrontEnd", new { status = "Closed" } )">Closed</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <a href="#">Properties<i class="fa fa-angle-down"></i></a>
+                                        @if (MenuPropertyTypes != null)
+                                        {
+                                            <ul role="menu" class="sub-menu">
+                                                @foreach (var item in MenuPropertyTypes)
+                                                {
+                                                    <li><a href="@Url.Action("Properties", "FrontEnd", new { filterType = @item.Title })">@item.Title</a></li>
+                                                }
+                                            </ul>
+                                        }
+                                    </li>
+                                    <li><a href="@Url.Action("About", "FrontEnd")">About</a></li>
+                                    <li><a href="@Url.Action("Contact", "FrontEnd")">Contact</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                        @using (Html.BeginForm("Search", "FrontEnd", new { filterSearch = "Properties" }, FormMethod.Get))
+                        {
+                            <div class="search_box pull-right">
+                                @Html.TextBox("Sr", ViewBag.CurrentFilter as string, new { @Class = "form-control", @Placeholder = "Search" })
+                            </div>
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div><!--/header-bottom-->
+        </header><!--/header-->
+
+
+    @RenderBody()
+   
+
+        <footer id="footer" class="@Settings.ThemeColor">
+            <!--Footer-->
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="companyinfo">
+                                <h2><span>@Settings.CompanyName.Substring(0, 1)</span>roperty4U</h2>
+                                <p>@Settings.CompanyDescription</p>
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            @if (TopAgents != null)
+                            {
+                                foreach (var item in TopAgents)
+                                {
+                                    <div class="col-sm-3">
+                                        <div class="video-gallery text-center">
+                                            <a href="@Url.Action("Search", "FrontEnd", new { Sr = item.FullName, filterSearch = "Properties" })">
+                                                <div class="iframe-img">
+                                                    @if (@item.ProfileImage != null)
+                                                    {
+                                                        <img src="~/Content/Uploads/Users/@item.ProfileImage" title="@item.FullName" alt="Agent Profile Photo" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/Uploads/Users/no-user-photo.jpg" title="@item.FullName" alt="Agent Profile Photo" />
+                                                    }
+                                                </div>
+                                                <div class="overlay-icon @Settings.ThemeColor">
+                                                    <i class="fa fa-user"></i>
+                                                </div>
+                                            </a>
+                                            <p>@item.FullName</p>
+                                            <h2>@item.JoinedDate.ToString().AsDateTime().ToString("dd MMM yyyy")</h2>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="address">
+                                <img src="~/Content/images/map.png" alt="" />
+                                <p>@Settings.OfficeAddress</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-widget">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="single-widget">
+                                <h2>Service</h2>
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="#">Online Help</a></li>
+                                    <li><a href="#">Contact Us</a></li>
+                                    <li><a href="#">Order Status</a></li>
+                                    <li><a href="#">Change Location</a></li>
+                                    <li><a href="#">FAQ’s</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="single-widget">
+                                <h2>Explore</h2>
+                                @if (MenuPropertyTypes != null)
+                                {
+                                    <ul class="nav nav-pills nav-stacked">
+                                        @foreach (var item in MenuPropertyTypesWithCount)
+                                        {
+                                            <li><a href="@Url.Action("Properties", "FrontEnd", new { filterType = @item.Title })">@item.Title</a></li>
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="single-widget">
+                                <h2>Policies</h2>
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="#">Terms of Use</a></li>
+                                    <li><a href="#">Privecy Policy</a></li>
+                                    <li><a href="#">Refund Policy</a></li>
+                                    <li><a href="#">Billing System</a></li>
+                                    <li><a href="#">Ticket System</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="single-widget">
+                                <h2>About</h2>
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li><a href="#">Company</a></li>
+                                    <li><a href="#">Careers</a></li>
+                                    <li><a href="#">Store Location</a></li>
+                                    <li><a href="#">Affillate Program</a></li>
+                                    <li><a href="#">Copyright</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-sm-offset-1">
+                            <div class="single-widget">
+                                <h2>Subscribe</h2>
+                                <form action="#" class="searchform">
+                                    <input type="text" disabled="disabled" placeholder="Your email address" />
+                                    <button type="submit" disabled="disabled" class="btn btn-default"><i class="fa fa-arrow-circle-o-right"></i></button>
+                                    <p>Get the most recent updates from <br />our site and be updated your self...</p>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <p class="pull-left">Copyright © @DateTime.Today.Year @if (allow)
+                        { @Settings.CompanyName }. All rights reserved.</p>
+                        <p class="pull-right">Powered by <span><a target="_blank" href="">Property4U</a></span></p>
+                    </div>
+                </div>
+            </div>
+
+        </footer><!--/Footer-->
+       
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/frontendJS")
+        @Scripts.Render("~/bundles/commonCookie")
+
+        @RenderSection("scripts", required: false)
+
+        </body>
+</html>

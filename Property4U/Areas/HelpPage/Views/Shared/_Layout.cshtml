@@ -1,0 +1,83 @@
+﻿@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="@if (allow){ @Settings.CompanyDescription; } else {  @("Property4U - Open Real Estate Solution") }">
+        <meta name="keywords" content="@if (allow){ @Settings.Keywords; } else {  @("quickly configurable, real estate 2.0, real estate bidding 2.0") }">
+        <meta name="author" content="@if (allow){ @Settings.WebsiteURL; } else {  @("www.property4u.com.pk") }">
+        <title>@ViewBag.Title - @if (allow){ @Settings.CompanyName; } else {  @("Property4U") } - API Docs</title>
+        <link rel="shortcut icon" type="image/ico" href="@if (allow){ @Url.Content("~/Content/Uploads/Assets/" + @Settings.Favicon)} else { @Url.Content("~/Content/Uploads/Assets/P4U_favicon.png") }">
+        @System.Web.Optimization.Styles.Render("~/Content/bootstrapCSS")
+        @System.Web.Optimization.Styles.Render("~/Content/controldeskCSS")
+        @System.Web.Optimization.Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar @Settings.ThemeColor navbar-default navbar-fixed-top" id="navbar-visiter">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="@Url.Action("Index", "ControlDesk")">
+                    @if (allow)
+                    {
+                        <p class="company-logo-text">@Settings.CompanyName</p>
+                    }
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "ControlDesk", new { Area = "" }, null)</li>
+                    <li>@Html.ActionLink("API", "Index", "Help")</li>
+                    <li>@Html.ActionLink("About", "About", "FrontEnd", new { Area = "" }, null)</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "FrontEnd", new { Area = "" }, null)</li>
+                </ul>
+                @*@Html.Partial("_LoginPartial")*@
+            </div>
+        </div>
+    </div>
+    <div class="container body-content" id="page-content">
+        @RenderBody()
+        <hr />
+    </div>
+    <div class="footer" id="foot">
+        <div class="container">
+            <p id="copyright">
+                &copy; @DateTime.Now.Year - @if (allow)
+                { @Settings.CompanyName;
+                }
+                else
+                { @("Property4U") }
+            </p>
+            <p id="powered-by">Powered by <b>Property4U</b></p>
+        </div>
+    </div>
+    <!-- end wrapper -->
+
+    @System.Web.Optimization.Scripts.Render("~/bundles/jquery")
+    @System.Web.Optimization.Scripts.Render("~/bundles/bootstrap")
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

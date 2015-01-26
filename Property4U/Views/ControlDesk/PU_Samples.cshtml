@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "P4U Sample Data";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h5 class="alert-success heading-padding">Successfully! Loaded Samples</h5>
+        @*<p>@ViewBag.FileData</p>*@
+
+        <div class="col-sm-12 sample">
+            <div class="product-image-wrapper">
+                <div class="single-products">
+                    <div class="productinfo Gray text-center">
+                        <div class="image">
+                            <img src="~/Content/images/loaded-data.png" title="Data Loaded Successfully" alt="Data Loaded Successfully" />
+                        </div>
+                    </div>
+                </div>
+                <div class="Gray choose">
+                    <ul class="nav nav-pills nav-justified">
+                        <li><a href="@Url.Action("Index", "ControlDesk")" class="addToWishlist"><i class="fa fa-dashboard"></i>Control Desk</a></li>
+                        <li><a href="@Url.Action("Index", "FrontEnd")" class="addToComparelist"><i class="fa fa-globe"></i>Web Frontend</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <!--End Page Header -->
+</div>

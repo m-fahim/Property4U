@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Property4U.Models.Feature>
+@helper  ConvertBytes(string IBytes)
+{
+    double IBytesI = Convert.ToDouble(IBytes);
+    string sSize = string.Empty;
+
+    if (IBytesI >= 1073741824)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1073741824) + " GB");
+    }
+    else if (IBytesI >= 1048576)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1048576) + " MB");
+    }
+    else if (IBytesI >= 1024)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1024) + " KB");
+    }
+    else if (IBytesI > 0 && IBytesI < 1024)
+    {
+        @(IBytes.ToString() + " bytes");
+    }
+}
+
+@{
+    ViewBag.Title = "Features";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageIcon)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImageSize)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImageIcon)
+        </td>
+        <td>
+            @if(item.ImageSize !=null){
+                @ConvertBytes(item.ImageSize.ToString())
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>

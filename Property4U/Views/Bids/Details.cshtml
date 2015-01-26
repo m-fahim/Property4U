@@ -1,0 +1,87 @@
+﻿@model Property4U.Models.Bid
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>Bid</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Bidding)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Bidding.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Member.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BidOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BidOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BidStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BidStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>

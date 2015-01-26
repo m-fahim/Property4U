@@ -1,0 +1,136 @@
+﻿@model Property4U.Models.Ad
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@helper  ConvertBytes(string IBytes)
+{
+
+    double IBytesI = Convert.ToDouble(IBytes);
+    string sSize = string.Empty;
+
+    if (IBytesI >= 1073741824)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1073741824) + " GB");
+    }
+    else if (IBytesI >= 1048576)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1048576) + " MB");
+    }
+    else if (IBytesI >= 1024)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1024) + " KB");
+    }
+    else if (IBytesI > 0 && IBytesI < 1024)
+    {
+        @(IBytes.ToString() + " bytes");
+    }
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>Ad</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <label>AdminID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Admin.Id)
+        </dd>
+
+        <dt>
+            <label>OrderID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Order.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WebsiteURL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WebsiteURL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Path)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Path)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ImageSize)
+        </dt>
+
+        <dd>
+            @ConvertBytes(Model.ImageSize.ToString())
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdDuration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdDuration)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remedies)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remedies)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PostedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

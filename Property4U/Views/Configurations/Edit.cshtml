@@ -1,0 +1,330 @@
+﻿@model Property4U.Models.Configuration
+@helper Truncate(string input, int length)
+{
+    if (input.Length <= length)
+    {
+        @input
+    }
+    else
+    {
+        @input.Substring(0, length)<strong>...</strong>
+    }
+}
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div class="row">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <h4>Configuration</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.ID)
+
+
+                    <div id="configSections">
+                        <ul>
+                            <li><a href="#seo">SEO</a></li>
+                            <li><a href="#styling">Styling</a></li>
+                            <li><a href="#core">Core</a></li>
+                            <li><a href="#social-media">Social Media</a></li>
+                        </ul>
+
+                        <div id="seo">
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CompanyName, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.CompanyName, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CompanyName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ShortTitle, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.ShortTitle, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.ShortTitle, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Tagline, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Tagline, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Tagline, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.WebsiteURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.WebsiteURL, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WebsiteURL, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.CompanyDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.CompanyDescription, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.CompanyDescription, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Keywords, htmlAttributes: new { @class = "control-label col-md-2" })
+                                    <div class="col-md-10">
+                                        @Html.EditorFor(model => model.Keywords, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Keywords, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-5">
+                                <div class="se-content">
+                                    <div class="se-title" id="gtitle1pete"><b>@Model.CompanyName</b></div>
+                                    <div class="se-url">
+                                        @Model.WebsiteURL
+                                    </div>
+                                    <div class="se-desc">
+                                        @Truncate(Model.CompanyDescription, 145)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="styling">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LogoPath, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <input type="file" accept="image/*" name="logoFile" id="logoFile" value="Choose File" class="form-control" />
+                                    @*@Html.EditorFor(model => model.LogoPath, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.HiddenFor(model => model.LogoPath, new { id = "LogoPath" })
+                                    <p style="font-size:small; color:green;">* Required logo dimensions (226x40)</p>
+                                    <p style="font-size:small; color:#428bca;">current selected logo <b>@Html.DisplayFor(model => model.LogoPath)</b></p>
+                                    <a href="@Url.Content("~/Content/Uploads/Assets/" + Model.LogoPath)"><img src="@Url.Content("~/Content/Uploads/Assets/" + Model.LogoPath)" alt="logo" id="transparent-bg" @*width="160" height="30"*@ /></a>
+                                    <input type="hidden" name="oldLogoPath" id="oldLogoPath" value="@Html.DisplayFor(model => model.LogoPath)" />
+                                    @Html.ValidationMessageFor(model => model.LogoPath, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Favicon, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    <input type="file" accept="image/*" name="faviconFile" id="faviconFile" value="Choose File" class="form-control" />
+                                    @*@Html.EditorFor(model => model.LogoPath, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.HiddenFor(model => model.Favicon, new { id = "LogoPath" })
+                                    <p style="font-size:small; color:green;">* Required favicon dimensions (64x64)</p>
+                                    <p style="font-size:small; color:#428bca;">current selected favicon <b>@Html.DisplayFor(model => model.Favicon)</b></p>
+                                    <a href="@Url.Content("~/Content/Uploads/Assets/" + Model.Favicon)"><img src="@Url.Content("~/Content/Uploads/Assets/" + Model.Favicon)" alt="favicon" id="transparent-bg" @*width="64" height="64"*@ /></a>
+                                    <input type="hidden" name="oldfaviconPath" id="oldfaviconPath" value="@Html.DisplayFor(model => model.Favicon)" />
+                                    @Html.ValidationMessageFor(model => model.Favicon, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ThemeColor, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EnumDropDownListFor(model => model.ThemeColor, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ThemeColor, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="core">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ConfigAdminID, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.ConfigAdminID, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.HiddenFor(model => model.ConfigAdminID, new { id = "ConfigAdminID", @Value = ViewBag.ConfigAdminID })
+                                    @Html.ValidationMessageFor(model => model.ConfigAdminID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PublicPhoneNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.PublicPhoneNo, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PublicPhoneNo, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.OfficeAddress, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.OfficeAddress, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.OfficeAddress, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PropertyRenewal, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EnumDropDownListFor(model => model.PropertyRenewal, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.PropertyRenewal, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            @*<div class="form-group">
+                @Html.LabelFor(model => model.SchedulerInterval, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EnumDropDownListFor(model => model.SchedulerInterval, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.SchedulerInterval, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TimeZoneId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownListFor(model => model.TimeZoneId, null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.TimeZoneId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FacebookAppId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FacebookAppId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.FacebookAppId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FacebookAppSecret, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FacebookAppSecret, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.FacebookAppSecret, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.GoogleClientId, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.GoogleClientId, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.GoogleClientId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.GoogleClientSecret, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.GoogleClientSecret, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.GoogleClientSecret, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-2">Sample Data</label>
+                                <div class="col-md-10">
+                                    <a href="#" class="btn btn-group-sm btn-danger"
+                                       data-toggle="modal"
+                                       data-target="#LoadDataWarning">Load</a>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="LoadDataWarning" tabindex="-1" role="dialog" aria-labelledby="LoadDataWarningLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="LoadDataWarningLabel">Load Sample Data</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>All database information will be lost. Do you really want to proceed!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                            <button type="button" id="LoadDataWarningConfirm" class="btn btn-primary">Yes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div id="social-media">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FacebookURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.FacebookURL, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.FacebookURL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TwitterURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.TwitterURL, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.TwitterURL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.GooglePlusURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.GooglePlusURL, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.GooglePlusURL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LinkedInURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.LinkedInURL, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.LinkedInURL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DribbbleURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DribbbleURL, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.DribbbleURL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+
+                        @Html.HiddenFor(model => model.LastEdit, htmlAttributes: new { @Value = ViewBag.LastEdit })
+
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Save" class="btn btn-default" />
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+    @section scripts {
+        <script type="text/javascript">
+            jQuery('#logoFile').change('input propertychange paste', function () {
+                $("#LogoPath").val($(this).val());
+            });
+            jQuery('#faviconFile').change('input propertychange paste', function () {
+                $("#Favicon").val($(this).val());
+            });
+
+            $(function () {
+                $("#configSections").tabs();
+            });
+
+            $("#WebsiteURL").val("http://" + $("#WebsiteURL").val());
+
+            $(function () {
+                $('#LoadDataWarningConfirm').click(function () {
+                    window.location.replace = "@Url.Action("PU_Samples", "ControlDesk")";
+                    //$('#LoadDataWarning').modal('hide');
+                });
+            });
+        </script>
+    }

@@ -1,0 +1,211 @@
+﻿@model Property4U.ViewModels.BiddingIndexData
+
+@{
+    ViewBag.Title = "Biddings";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<h3>Select Property</h3>
+<table class="table">
+    <tr>
+        <th>
+            <label>ID</label>
+        </th>
+        <th>
+            <label>Agent Name</label>
+        </th>
+        <th>
+            <label>Address</label>
+        </th>
+        <th>
+            <label>Title</label>
+        </th>
+        <th>
+            @Html.ActionLink("Type", "Inquiry", new { sortOrder = ViewBag.TypeSortParm })
+        </th>
+        <th>
+            <label>Number Of Rooms</label>
+        </th>
+        <th>
+            <label>Area Measurement</label>
+        </th>
+        <th>
+            <label>Area Units</label>
+        </th>
+        <th>
+            <label>Price</label>
+        </th>
+        <th>
+            @Html.ActionLink("For", "Inquiry", new { sortOrder = ViewBag.ForSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th>
+            <label>Views</label>
+        </th>
+        <th>
+            @Html.ActionLink("Publish On", "Inquiry", new { sortOrder = ViewBag.DateSortParm, currentFilter = ViewBag.CurrentFilter })
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Properties)
+    {
+        string selectedRow = "";
+        if (item.ID == ViewBag.PropertyID)
+        {
+            selectedRow = "success";
+        }
+        <tr class="@selectedRow">
+            <td>
+                @(item.ID)
+            </td>
+            <td>
+                @(item.Agent.FullName)
+            </td>
+            <td>
+                @(item.Address.Number + "-" + item.Address.Block + " " + item.Address.Name + ", " + item.Address.Street + " " + item.Address.City + ", " + item.Address.State + " (" + item.Address.ZipCode + ") " + item.Address.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OfType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberOfRooms)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AreaMeasurement)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AreaUnits)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.For)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Views)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishOn)
+            </td>
+            <td>
+                @Html.ActionLink("Select", "Inquiry", new { id = item.ID })@* |
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+            </td>
+        </tr>
+    }
+
+</table>
+<br/>
+
+@if (Model.Biddings != null)
+{
+    <h3>Biddings announced on Selected Property</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Starting Bid</th>
+            <th>Winning Bid</th>
+            <th>Posted On</th>
+            <th>Bidding Status</th>
+        </tr>
+
+        @foreach (var item in Model.Biddings)
+        {
+            string selectedRow = "";
+            if (item.ID == ViewBag.BiddingID)
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                    @Html.ActionLink("Select", "Inquiry", new { BiddingID = item.ID })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MinExp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WinningBid)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PostedOn)
+                </td>
+                <td>
+                    <span class="progress status-@item.BiddingStatus">
+                        @Html.DisplayFor(modelItem => item.BiddingStatus)
+                    </span>
+                </td>
+            </tr>
+        }
+
+    </table>
+    <br />
+}
+
+@if (Model.Bids != null)
+{
+    <h3>
+        Bids Placed on Selected Bidding
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Price</th>
+            <th>BidOn</th>
+            <th>BidStatus</th>
+
+        </tr>
+        @foreach (var item in Model.Bids)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BidOn)
+                </td>
+                <td>
+                    <span class="progress status-@item.BidStatus">
+                        @Html.DisplayFor(modelItem => item.BidStatus)
+                    </span>
+                </td>
+            </tr>
+        }
+    </table>
+    <br/>
+}

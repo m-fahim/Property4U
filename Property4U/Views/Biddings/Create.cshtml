@@ -1,0 +1,158 @@
+﻿@model Property4U.Models.Bidding
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Bidding</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PropertyID, "PropertyID", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("PropertyID", (SelectList)ViewBag.PropertyIDList, String.Empty, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PropertyID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control StartDate", @readonly = "readonly", @placeholder = "Pick Start Date" } })
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control EndDate", @readonly = "readonly", @placeholder = "Pick End Date" } })
+                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MinExp, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MinExp, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MinExp, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MaxExp, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MaxExp, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MaxExp, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WinningBid, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.WinningBid, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.WinningBid, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PostedOn, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PostedOn, new { htmlAttributes = new { @class = "form-control", @Value = ViewBag.PostedOn, @readonly = "readonly" } })
+                @Html.ValidationMessageFor(model => model.PostedOn, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BiddingStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EnumDropDownListFor(model => model.BiddingStatus, "Active", htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                @Html.HiddenFor(model => model.BiddingStatus, new { id = "BiddingStatus", @Value = ViewBag.BiddingStatus })
+            </div>
+        </div>
+
+        @Html.HiddenFor(model => model.LastEdit)
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        function UpdateBiddingStatus(sDay) {
+            var startDate = new Date(sDay);
+            var postedDate = $("#PostedOn").val();
+            var currentDate = new Date(postedDate);
+            // If PostedDate is less then Bidding StartDate than update BiddingStatus and value
+            if (startDate > currentDate) {
+                $("#BiddingStatus").val('0');
+                $('input[id = "BiddingStatus"]').val('UpComing');
+            } else if (startDate <= currentDate) {
+                $(startDate).val(postedDate);
+                $("#BiddingStatus").val('1');
+                $('input[id = "BiddingStatus"]').val('Active');
+            }
+        }
+
+        //jQuery('#StartDate').on('input propertychange paste', function () {
+        //    DoAction($('#StartDate').val());
+        //});
+
+        $(function () {
+
+            $("#StartDate").datepicker({
+                defaultDate: "+1w",
+                minDate: new Date(),
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                numberOfMonths: 2,
+                onClose: function (selectedDate) {
+                    $("#EndDate").datepicker("option", "minDate", selectedDate);
+                    //DoAction($('#StartDate').val());
+                }
+            });
+
+            $("#EndDate").datepicker({
+                defaultDate: "+1w",
+                dateFormat: 'yy-mm-dd',
+                changeMonth: true,
+                numberOfMonths: 2,
+                onClose: function (selectedDate) {
+                    $("#StartDate").datepicker("option", "maxDate", selectedDate);
+                    //DoAction($('#StartDate').val());
+                }
+            });
+
+        });
+
+    </script>
+}

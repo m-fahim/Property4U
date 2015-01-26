@@ -1,0 +1,589 @@
+﻿@model Property4U.Models.ControlDeskActiveAD
+
+@{
+    Property4U.Core.SysTask Task = Property4U.Core.TaskInfo.Info;
+}
+
+@{
+    ViewBag.Title = "Control Desk";
+}
+
+@helper  ConvertBytes(string IBytes)
+{
+
+    double IBytesI = Convert.ToDouble(IBytes);
+    string sSize = string.Empty;
+
+    if (IBytesI >= 1073741824)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1073741824) + " GB");
+    }
+    else if (IBytesI >= 1048576)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1048576) + " MB");
+    }
+    else if (IBytesI >= 1024)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1024) + " KB");
+    }
+    else if (IBytesI > 0 && IBytesI < 1024)
+    {
+        @(IBytes.ToString() + " bytes");
+    }
+    else if (IBytesI == 0)
+    {
+        @(IBytes.ToString() + " KB");
+    }
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@if (Model.RenewalsCount > 0) {
+<div class="row">
+    <!-- Welcome -->
+    <div class="col-lg-12">
+        <div class="alert alert-info">
+            <i class="fa fa-folder-open"></i><b>&nbsp;Hi! </b>Welcome Back <b>@User.Identity.Name</b>
+            <i class="fa  fa-pencil"></i><b>&nbsp;@Model.RenewalsCount </b>Pending for Review. &nbsp;
+        </div>
+    </div>
+    <!--end  Welcome -->
+</div>
+}
+
+
+<div class="row">
+    <!--quick info section -->
+    @*<div class="col-lg-3">
+        <div class="alert alert-danger text-center">
+            <i class="fa fa-calendar fa-3x"></i>&nbsp;<b>20 </b>Meetings Sheduled This Month
+
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="alert alert-info text-center">
+            <i class="fa fa-rss fa-3x"></i>&nbsp;<b>1,900</b> New Subscribers This Year
+
+        </div>
+    </div>*@
+    <div class="col-lg-3">
+        <div class="alert alert-warning text-center">
+            <i class="fa  fa-pencil fa-3x"></i>&nbsp;<b>@Model.RenewalsCost $ </b>Payment Dues For Pending Renewals
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="alert alert-success text-center">
+            <i class="fa  fa-suitcase fa-3x"></i>&nbsp;<b>@Model.AdsCount </b>Active Ads
+        </div>
+    </div>
+    <!--end quick info section -->
+</div>
+
+
+<div class="row">
+    <div class="col-lg-8">
+        <!--Area chart example -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <i class="fa fa-area-chart fa-fw"></i>Stock Worth
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li>
+                                <a href="#">Action</a>
+                            </li>
+                            <li>
+                                <a href="#">Another action</a>
+                            </li>
+                            <li>
+                                <a href="#">Something else here</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">Separated link</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <div id="properties-worth-chart"></div>
+            </div>
+
+        </div>
+        <!--End area chart example -->
+        <!--Popular Properties -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Popular Properties
+                <div class="pull-right">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li>
+                                <a href="#">Ascending</a>
+                            </li>
+                            <li>
+                                <a href="#">Descending</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Cost</th>
+                                        <th>Type</th>
+                                        <th>Area</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Properties)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                            <td> @Html.DisplayFor(modelItem => item.Title)</td>
+                                            <td> @Html.DisplayFor(modelItem => item.Price)</td>
+                                            <td> @Html.DisplayFor(modelItem => item.For)</td>
+                                            <td> @Html.DisplayFor(modelItem => item.Address.AreaName)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+        <div class="col-lg-4">
+            @*<div class="panel panel-primary text-center no-boder">
+                <div class="panel-body yellow">
+                    <i class="fa fa-shopping-cart fa-3x"></i>
+                    <h3>@Model.AdsCount</h3>
+                </div>
+                <div class="panel-footer">
+                    <span class="panel-eyecandy-title">
+                        Active Ads
+                    </span>
+                </div>
+            </div>*@
+            <div class="panel panel-primary text-center no-boder">
+                <div class="panel-body blue">
+                    <i class="fa fa-shopping-cart fa-3x"></i>
+                    <h3>@Model.OrdersCount</h3>
+                </div>
+                <div class="panel-footer">
+                    <span class="panel-eyecandy-title">
+                        Pending Orders Found
+                    </span>
+                </div>
+            </div>
+            <div class="panel panel-primary text-center no-boder">
+                <div class="panel-body green">
+                    <i class="fa fa fa-floppy-o fa-3x"></i>
+                    <h3>@ConvertBytes(Model.UploadedDataSize.ToString())</h3>
+                </div>
+                <div class="panel-footer">
+                    <span class="panel-eyecandy-title">
+                        Uploaded Data
+                    </span>
+                </div>
+            </div>
+            <div class="panel panel-primary text-center no-boder">
+                <div class="panel-body red">
+                    <i class="fa fa-thumbs-up fa-3x"></i>
+                    <h3>@Model.Users.Count</h3>
+                </div>
+                <div class="panel-footer">
+                    <span class="panel-eyecandy-title">
+                        Registered Users
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="row">
+    <div class="col-lg-5">
+        <!-- Notifications-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <i class="fa fa-database fa-fw"></i>Server Information
+            </div>
+
+            <div class="panel-body">
+                <div class="list-group">
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-info-circle fa-fw"></i>Product Version
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.ProductVersion</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-plus fa-fw"></i>Patch Level
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.PatchLevel</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-info fa-fw"></i>Product Edition
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.ProductEdition</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-tasks fa-fw"></i>CLR Version
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.CLRVersion</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-crosshairs fa-fw"></i>Default Collation
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.DefaultCollation</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-bolt fa-fw"></i>Instance
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.Instance</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-thumb-tack fa-fw"></i>LCID
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.LCID</em>
+                        </span>
+                    </a>
+                    <a href="#" class="list-group-item">
+                        <i class="fa fa-bookmark-o fa-fw"></i>Server Name
+                        <span class="pull-right text-muted small">
+                            <em>@Model.ServerInfo.ServerName</em>
+                        </span>
+                    </a>
+
+                </div>
+                <!-- /.list-group -->
+                @*<a href="#" class="btn btn-default btn-block">View All Alerts</a>*@
+            </div>
+
+        </div>
+        <!--End Notifications-->
+    </div>
+    <div class="col-lg-3">
+        <!-- Donut Example-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <i class="fa fa-pie-chart fa-fw"></i>Availability
+            </div>
+            <div class="panel-body">
+                <div id="properties-for-chart"></div>
+                @*<a href="@Url.Action("index", "ManageProperties")" class="btn btn-default btn-block">View Details</a>*@
+            </div>
+
+        </div>
+        <!--End Donut Example-->
+    </div>
+    <div class="col-lg-4">
+        <!-- Chat Panel Example-->
+        <div id="container">
+            <div class="chat-panel panel panel-primary">
+                <div class="panel-heading">
+                    <i class="fa fa-comments fa-fw"></i>
+                    Chat
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                        <ul class="dropdown-menu slidedown">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-refresh fa-fw"></i>Refresh
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-check-circle fa-fw"></i>Available
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-times fa-fw"></i>Busy
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-clock-o fa-fw"></i>Away
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#" id="loginStatus">
+                                    <i class="fa fa-sign-out fa-fw"></i>Sign In
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <form role="form" class="dropdown-menu slidedown">
+                            <div class="form-group">
+                                <input id="searchinput" class="form-control" type="search" placeholder="Search..." />
+                            </div>
+                            <div id="searchlist" class="list-group onlineusers">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+                    <ul class="chat" id="chatlog">
+                        <li id="userGuide" class="left clearfix">To Start Conversation > <i class="fa fa-chevron-down"></i> > Sign In > <i class="fa fa-search"></i> Search Online Users and Choose One > Type Message > Send</li>
+                        <li id="userGuide" class="left clearfix"><i class="fa fa-user"></i> <span class="label label-danger">Admin</span> <span class="label label-warning">Agent</span> <span class="label label-success">Member</span></li>
+                    </ul>
+                </div>
+
+                <div class="panel-footer">
+                    <div class="input-group">
+                        <input spellcheck="true" id="message" type="text" disabled="disabled" class="form-control input-sm" placeholder="Type your message here..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="btnsend" disabled="disabled" value="Send">Send</button>
+                        </span>
+                    </div>
+                </div>
+                <input type="hidden" id="nick" />
+                <input type="hidden" id="nickname" />
+                <input type="hidden" id="UsernameSearch" value="">
+                <input type="hidden" id="UserRole" value="">
+            </div>
+        </div>
+    </div>    <!--End Chat Panel Example-->
+</div>
+
+@section scripts {
+<script type="text/javascript" src="~/Scripts/bootstrap-list-filter.src.js"></script>
+<!--Reference the SignalR library. -->
+<script type="text/javascript" src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+<!--Reference the autogenerated SignalR hub script. -->
+<script src="~/signalr/hubs"></script>
+
+<script type="text/javascript">
+
+    var tokenKey = 'accessToken';
+    var token = $.cookie(tokenKey);
+    var headers = {};
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+
+    $.ajax({
+        url: location.protocol + "//" + location.host + '/api/Properties/GetMonthlyPropertiesWorth',
+        headers: headers,
+        dataType: 'json',
+        success: function (result) {
+            new Morris.Area({
+                element: 'properties-worth-chart',
+                data: result,
+                xkey: 'Period',
+                ykeys: ['Properties', 'Worth'],
+                labels: ['Properties', 'Worth ($)'],
+                pointSize: 2,
+                hideHover: 'auto',
+                resize: true
+            });
+
+        }
+    });
+
+    $.ajax({
+        url: location.protocol + "//" + location.host + '/api/Properties/GetPropertiesFor',
+        headers: headers,
+        dataType: 'json',
+        success: function (result) {
+            new Morris.Donut({
+                element: 'properties-for-chart',
+                data: result,
+                resize: true,
+                // colors: [
+                // '#0BA462',
+                // '#39B580',
+                // '#67C69D',
+                // '#95D7BB'
+                //],
+            });
+        }
+    });
+
+    /***************** Chat Hub Module *****************/
+    // Stoping bootstrap dropdown from closing when clicked
+    $('.dropdown-menu input, .dropdown-menu label').click(function (e) {
+        e.stopPropagation();
+    });
+    
+    @{
+        string role = null;
+        if(User.IsInRole("Admin")){
+            role = "AD";
+        }else if (User.IsInRole("Agent")){
+            role = "AG";
+        }else {
+            role = "ME";
+        }
+    }
+    $('#UserRole').val("@role");
+
+    // Select User from bootstrap filterable search list
+    $('#searchlist').btsListFilter('#searchinput', { itemChild: 'span' });
+    $('#searchlist').on('click', 'a', function (e) {
+        e.preventDefault();
+        // Set Selected User for Conversation
+        $('#searchinput').val($(this).find('span:first').text());
+        $('#UsernameSearch').val($(this).find('#Username').val());
+        // Allow user to conversate on selection
+        $('#message').removeAttr('disabled');
+        $('#btnsend').removeAttr('disabled');
+        // Remove User Guide and userConversation
+        $('#chatlog #userGuide').remove();
+        $('#chatlog #userConversation').remove();
+    });
+
+    $(function () {
+        var chat;
+        $('#loginStatus').click(function () {
+            if ($.trim($(this).text()) == "Sign In") {
+
+                $("#nick").val("@if (User.Identity.Name.Contains('@'))
+                { @(User.Identity.Name.Substring(0, User.Identity.Name.LastIndexOf('@'))); }");
+            startChatHub();
+            $(this).text("Sign Out");
+        }
+        else {
+        // Remove # from URL
+                window.location.href.substr(0, window.location.href.indexOf('#'));
+        location.reload();
+        //$(this).text("Sign In");
+    }
+    });
+    });
+
+    function startChatHub() {
+        chat = $.connection.chatHub;
+
+        // Get the user name.
+        $('#nickname').val($('#nick').val() + " '@role'");
+
+        chat.client.online = function (name) {
+            if (name != $('#nickname').val())
+                $('.onlineusers').append('<a class="list-group-item" href="#"><span>' + getUsername(name) + '<input id="Username" type="hidden" value="' + name + '"/></span><div class="label label-' + getUserRoleClass(getUserRole(name)) + ' pull-right" style="margin-top: 4px;">' + getUserRole(name) + '</div></a>');
+            else
+                $('#chatlog').append('<li class="left clearfix"><p><i class="fa fa-user"></i> <strong>' + getUsername(name) + '</strong> <span class="label label-success pull-right">Online</span></p></li>');
+        };
+
+        chat.client.enters = function (name) {
+            $('#chatlog').append('<li id="userConversation" class="left clearfix"><p class="label label-success">' + getUsername(name) + ' joins the conversation</p></li>');
+            $('.onlineusers').append('<a class="list-group-item" href="#"><span class="label label-success">' + getUsername(name) + '<input id="Username" type="hidden" value="' + name + '"/></span><div class="label label-' + getUserRoleClass(getUserRole(name)) + ' pull-right" style="margin-top: 5px;">' + getUserRole(name) + '</div></a>');
+        };
+        // Create a function that the hub can call to broadcast chat messages.
+        chat.client.broadcastMessage = function (name, message) {
+            //Interpret smileys
+            //message = message.replace(":)", "<img src=\"/images/smile.gif\" class=\"smileys\" />");
+            //message = message.replace(":D", "<img src=\"/images/laugh.gif\" class=\"smileys\" />");
+            //message = message.replace(":o", "<img src=\"/images/cool.gif\" class=\"smileys\" />");
+
+            var messagePosClass = (name == $('#nickname').val()) ? "left" : "right";
+
+            //display the message
+            $('#chatlog').append('<li id="userConversation" class="' + messagePosClass + ' clearfix">'
+                    + '<span class="chat-img pull-' + messagePosClass + '">'
+                        + '<p class="img-circle chatRole label-' + getUserRoleClass(getUserRole(name)) + '">' + getUserRole(name) + '</p>'
+                    + '</span>'
+                    + '<div class="chat-body clearfix">'
+                        + '<div class="header">'
+                            + '<strong class="primary-font">' + getUsername(name) + '</strong>'
+                            + '<small class="pull-right text-muted">'
+                                + '<i class="fa fa-clock-o fa-fw"></i>@DateTime.Now.ToString(@"HH:mm:ss tt")'
+                            + '</small>'
+                        + '</div>'
+                        + '<p>'
+                            + message
+                        + '</p>'
+                   + '</div>'
+                + '</li>');
+        };
+
+        chat.client.disconnected = function (name) {
+            //Calls when someone leaves the page
+            $('#chatlog').append('<li id="userConversation" class="left clearfix"><p class="label label-danger">' + getUsername(name) + ' leaves the conversation</p></li>');
+            // Starts with the current element and then climbs up the chain looking for a matching element "a" contains name to remove
+            $('.onlineusers a span:first').closest('a').remove(":contains('" + getUsername(name) + "')");
+            // Set Selected User for Conversation
+            $('#searchinput').val('');
+            $('#UsernameSearch').val('');
+            // Disable user to conversate
+            $('#message').attr('disabled','disabled');
+            $('#btnsend').attr('disabled','disabled');
+        }
+
+        // Start the connection.
+        $.connection.hub.start().done(function () {
+            //Calls the notify method of the server
+            chat.server.notify($('#nickname').val(), $.connection.hub.id);
+
+            $('#btnsend').click(function () {
+                chat.server.sendToSpecific($('#nickname').val(), $('#message').val(), $("#UsernameSearch").val());
+                // Clear text box and reset focus for next comment.
+                $('#message').val('').focus();
+            });
+
+        });
+    }
+
+    /* User Information and Styling */
+    function getUsername(name) {
+        return name.substr(0, name.indexOf(" '"))
+    }
+
+    function getUserRole(name) {
+
+        return name.match(/'([^']+)'/)[1];
+    }
+    function getUserRoleClass(role) {
+        switch (role){
+            case "AD" :
+                return "danger";
+            case "AG" :
+                return "warning";
+            case "ME":
+                return "success";
+        }
+    }
+</script>
+}

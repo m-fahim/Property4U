@@ -1,0 +1,52 @@
+﻿@* Use Custom "ApplicationRole" Implementation Derived from the Default "IdentityRole" Class - P4U *@
+@model IEnumerable<IdentitySample.Models.ApplicationRole>
+@*@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>*@
+
+@{
+    ViewBag.Title = "Roles";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        @* Custom Attribute - P4U*@
+        <th>
+            @Html.DisplayNameFor(model => model.Responsibilities)
+        </th>
+        <th>
+
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            @* Custom Attribute - P4U*@
+            <td>
+                @Html.DisplayFor(modelItem => item.Responsibilities)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

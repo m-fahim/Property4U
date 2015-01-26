@@ -1,0 +1,273 @@
+﻿@model Property4U.Models.PlaceBidPropertyPhotoViewModel
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+@{
+    ViewBag.Title = Model.Bidding.Title;
+}
+
+@helper DisplayNameSys(string myfield, string type)
+{
+    dynamic field = null;
+    if (!myfield.IsEmpty()) {
+        if (type.Equals("Condition"))
+        {
+            field = Model.Bidding.Property.Condition.GetType().GetField(myfield);
+        }
+            if (field != null)
+            {
+                var display = ((System.ComponentModel.DataAnnotations.DisplayAttribute[])field.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)).FirstOrDefault();
+                if (display != null)
+                {
+                    @display.Name
+                }
+                else {
+                    @myfield;
+                }
+            }
+    }
+}
+
+<link href="~/Content/bootstrap-rating.css" rel="stylesheet">
+
+<section id="advertisement">
+    <div class="container">
+        <div id="topad">
+            <a href="">
+                <img src="" alt="advertisement">
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="@Settings.ThemeColor">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-3">
+                <div class="left-sidebar">
+                    <!-- Agent Profile -->
+                    <div class="profile-photo">
+                        @if (@Model.Bidding.Property.Agent.ProfileImage != null)
+                        {
+                            <img class="img-responsive" src="~/Content/Uploads/Users/" title="@Model.Bidding.Property.Agent.FirstName @Model.Bidding.Property.Agent.LastName" alt="Agent Profile Photo" />
+                        }
+                        else
+                        {
+                            <img class="img-responsive" src="~/Content/Uploads/Users/no-user-photo.jpg" title="@Model.Bidding.Property.Agent.FirstName @Model.Bidding.Property.Agent.LastName" alt="Agent Profile Photo" />
+                        }
+                        <ul class="list-group">
+                            <li class="badge margin-bottom">@Model.Bidding.Property.Agent.FirstName @Model.Bidding.Property.Agent.LastName</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-home"></span><span class="badge">@Model.AgentProperties.Count</span>Properties</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-bullhorn"></span><span class="badge">@Model.AgentBiddings.Count</span>Biddings</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-map-marker"></span>@Model.Bidding.Property.Agent.City</li>
+                        </ul>
+                    </div><!-- Agent Profile -->
+
+                    <div class="shipping text-center">
+                        <!--shipping-->
+                        <div id="sidead">
+                            <a href="">
+                                <img src="" alt="advertisement">
+                            </a>
+                        </div>
+                    </div><!--/shipping-->
+
+                </div>
+            </div>
+            <div class="col-sm-9 padding-right">
+                <div class="product-details">
+                    <!--product-details-->
+                    <div class="col-sm-5">
+                        <div class="view-product">
+                            @if (Model.Photo != null)
+                            {
+                                <img src="~/Content/Uploads/Properties/Medium/@Model.Photo.PhotoTitle" alt="@Model.Photo.PhotoTitle" />
+                                @*<h3>ZOOM</h3>*@
+                            }
+                            else
+                            {
+                                <img src="~/Content/Uploads/Properties/Medium/no-photo.jpg" title="@Html.DisplayFor(modelItem => Model.Bidding.Title)" alt="@Html.DisplayFor(modelItem => Model.Bidding.Title)" />
+                            }
+                        </div>
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="product-information @Settings.ThemeColor">
+                            <!--/product-information-->
+                            @if (Model.WinningBid != null)
+                            {
+                                <div class="promotion"> 
+                                    <div class="loaction"> 
+                                        @Model.WinningBid.Member.FirstName @Model.WinningBid.Member.LastName
+                                    </div> 
+                                    <div class="status status-Allowed">
+                                        @Html.DisplayFor(modelItem => Model.WinningBid.Price)
+                                    </div>
+                                </div>
+                            }
+                            <h2 style="margin-top:25px">@Model.Bidding.Title</h2>
+                            <p>Bidding ID: @Model.Bidding.ID</p>
+                            <span>
+                                <span>@Html.DisplayFor(modelItem => @Model.Bidding.Property.Price)</span>
+                                @if (!Model.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                {
+                                    <a href="@Url.Action("Create", "Bids", new { BID = @Model.Bidding.ID })" class="btn btn-default cart @Settings.ThemeColor">
+                                        <i class="fa fa-user"></i>
+                                        Place Bid
+                                    </a>
+                                }
+
+                            </span>
+                            <p><b>For:</b> <a href="@Url.Action("Details", "FrontEnd", new { PID = @Model.Bidding.PropertyID })">@Model.Bidding.Property.Title</a></p>
+                            <p><b>Availability:</b> @Model.Bidding.Property.Availability</p>
+                            @if (!Model.Bidding.Property.OfType.ToString().Equals("Land"))
+                            {
+                                <p><b>Condition:</b> 
+                                @if (!Model.Bidding.Property.Condition.ToString().IsEmpty())
+                                {
+                                    @DisplayNameSys(Model.Bidding.Property.Condition.ToString(), "Condition");
+                                }
+                                </p>
+                            }
+                            <p><b>Type:</b> @Model.SubType</p>
+                                @*<a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>*@
+                        </div><!--/product-information-->
+                    </div>
+                </div><!--/product-details-->
+
+                <div class="col-md-12">
+                    <h2 class="title @Settings.ThemeColor text-center">Bids</h2>
+                    @if (Model.Bids.Count != 0)
+                    {
+                        <table class="table">
+                            <tr>
+                                <th>Bidder</th>
+                                <th>Remarks</th>
+                                <th>Bid</th>
+                                <th>Bid On</th>
+                                <th>Status</th>
+
+                            </tr>
+                            @foreach (var item in Model.Bids)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Member.FirstName) @Html.DisplayFor(modelItem => item.Member.LastName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BidOn)
+                                    </td>
+                                    <td>
+                                        <span class="progress status-@item.BidStatus">
+                                            @Html.DisplayFor(modelItem => item.BidStatus)
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                        @Html.PagedListPager(Model.Bids, page => Url.Action("PlaceBid",
+                                                                   new { page, BID = ViewBag.CurrentBID }))
+                        <br />
+                    }
+                    else
+                    {
+                        <div class="product-information"><p><b></b>NO BIDS</p></div>
+                    }
+
+                </div><!--/category-tab-->
+
+                                @if (Model.RelatedBiddings.Count() != 0)
+                                {
+                                    <div class="recommended_items @Settings.ThemeColor">
+                                        <!--recommended_items-->
+                                        <h2 class="title @Settings.ThemeColor text-center">recommended biddings</h2>
+
+                                        <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+
+                                            <div class="carousel-inner">
+                                                @{int sectionItem = 1; }
+                                                @foreach (var item in Model.RelatedBiddings)
+                                                {
+
+                                                    if (sectionItem == 1 || sectionItem == 4)
+                                                    {
+                                                        string state = (sectionItem == 1) ? "active" : "";
+
+                                                        @:<div class="item @state">
+                                    }
+                                    <div class="col-sm-4">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo @Settings.ThemeColor text-center">
+                                                    @if (item.Photo != null)
+                                                    {
+                                                        <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Bidding.Title)" />
+                                                    }
+                                                    <h2>@Html.DisplayFor(modelItem => item.Bidding.Property.Price)</h2>
+                                                    <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                    <a href="@Url.Action("PlaceBid", "FrontEnd", new { BID = @item.Bidding.ID })" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                                    if (sectionItem == 3 || sectionItem == 6)
+                                                    {
+                                                        @:</div>
+                                                    }
+
+                                                    sectionItem++;
+
+                                                }
+
+                                            </div>
+
+                                        </div>
+                                        <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                                            <i class="fa fa-angle-left"></i>
+                                        </a>
+                                        <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div><!--/recommended_items-->
+               }
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/AdsScriptTopBar.js"></script>
+    <script type="text/javascript" src="~/Scripts/AdsScriptSideBar.js"></script>
+}

@@ -1,0 +1,155 @@
+﻿@model Property4U.Models.Order
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@helper  ConvertBytes(string IBytes)
+{
+
+    double IBytesI = Convert.ToDouble(IBytes);
+    string sSize = string.Empty;
+
+    if (IBytesI >= 1073741824)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1073741824) + " GB");
+    }
+    else if (IBytesI >= 1048576)
+    {
+        @(String.Format("{0:D}", IBytesI / 1048576) + " MB");
+    }
+    else if (IBytesI >= 1024)
+    {
+        @(String.Format("{0:##.##}", IBytesI / 1024) + " KB");
+    }
+    else if (IBytesI > 0 && IBytesI < 1024)
+    {
+        @(IBytes.ToString() + " bytes");
+    }
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+
+        <dt>
+            <label>AgentID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Size)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Size)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfAds)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfAds)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipFilePath)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipFilePath)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipFileSize)
+        </dt>
+
+        <dd>
+            @ConvertBytes(Model.ZipFileSize.ToString())
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AdsDuration)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdsDuration)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Remedies)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Remedies)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if (Request.IsAuthenticated && User.IsInRole("Agent"))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) @(" | ")
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

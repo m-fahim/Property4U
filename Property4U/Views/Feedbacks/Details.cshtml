@@ -1,0 +1,102 @@
+﻿@model Property4U.Models.Feedback
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@{
+    var param = (Request.Params["reportAbuse"] != null) ? Request.Params["reportAbuse"].Equals("True") : false;
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>@{if (param){ @("Flag");}else{ @("Feedback");}}</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.MemberID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Member.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PropertyID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Properties.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        @if (Model.For.ToString().Equals("Process_Feedback"))
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.AgentRating)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AgentRating)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.AgentReview)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AgentReview)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OverallExperience)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OverallExperience)
+            </dd>
+        }
+        <dt>
+            @Html.DisplayNameFor(model => model.FeedbackOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FeedbackOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @*@Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |*@
+    @Html.ActionLink("Back to List", "Index", new { reportAbuse = Request.Params["reportAbuse"] })
+</p>

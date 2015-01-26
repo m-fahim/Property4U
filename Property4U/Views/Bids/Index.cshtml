@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Property4U.Models.Bid>
+
+@{
+    ViewBag.Title = "Bids";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.BiddingID)
+        </th>
+        <th>
+            <label>Bidding Title</label>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BidOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BidStatus)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.BiddingID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Bidding.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Price)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BidOn)
+        </td>
+        <td>
+            <span class="progress status-@item.BidStatus">
+                @Html.DisplayFor(modelItem => item.BidStatus)
+            </span>
+        </td>
+        <td>
+            @*@Html.ActionLink("Edit", "Edit", new { id=item.ID }) |*@
+            @Html.ActionLink("Details", "Details", new { id=item.ID })
+            
+            @* Not Allow User to delete Bid after results are finalized. *@
+            @{
+                bool allowDel = true;
+                if (item.BidStatus.ToString().Equals("Winner"))
+                {
+                    allowDel = false;
+                }
+                else if (item.BidStatus.ToString().Equals("Rejected"))
+                {
+                    allowDel = false;
+                }
+            }
+
+            @if (allowDel)
+            {
+                @(" | ");
+                @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            }
+        </td>
+    </tr>
+}
+
+</table>

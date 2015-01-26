@@ -1,0 +1,307 @@
+﻿@model Property4U.Models.HomeViewModels
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+@{
+    ViewBag.Title = "Properties";
+}
+
+@helper DisplayNameSys(System.Reflection.FieldInfo myfield)
+{
+    dynamic field = myfield;
+    
+        if (field != null)
+        {
+            var display = ((System.ComponentModel.DataAnnotations.DisplayAttribute[])field.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)).FirstOrDefault();
+            if (display != null)
+            {
+                @display.Name
+            }
+        }
+}
+
+<section id="advertisement">
+    <div class="container">
+        <div id="topad"> 
+            <a href="">
+                <img src="" alt="advertisement">
+            </a> 
+        </div>
+    </div>
+</section>
+
+    <section class="@Settings.ThemeColor">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="left-sidebar @Settings.ThemeColor">
+                        <h2>Category</h2>
+                        <div class="panel-group category-products" id="accordian">
+                            <!--category-productsr-->
+                            @foreach (var items in Model.TypeSubTypes)
+                            {
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4 class="panel-title">
+                                            @if (items.SubTypes != null)
+                                            {
+                                                <a data-toggle="collapse" data-parent="#accordian" href="#@items.Type.Title">
+                                                    <span class="badge pull-right"><i class="fa fa-plus"></i></span>
+                                                    @items.Type.Title
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink(items.Type.Title, "Properties", new { filterType = items.Type.Title })
+                                            }
+                                        </h4>
+                                    </div>
+
+                                    @if (items.SubTypes != null)
+                                    {
+                                        <div id="@items.Type.Title" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul>
+                                                    @foreach (var subItems in items.SubTypes)
+                                                    {
+                                                        <li>@Html.ActionLink(subItems.Title, "Properties", new { filterType = items.Type.Title, filterSuType = subItems.Title })</li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+                        </div><!--/category-products-->
+                        @if (Model.For.Count() != 0)
+                        {
+                            <div class="brands_products">
+                                <!--brands_products-->
+                                <h2>For</h2>
+                                @if (ViewBag.CurrentFor != null)
+                                {
+                                    <a href="@Url.Action("Properties", new { filterType = ViewBag.CurrentType, filterSuType = ViewBag.CurrentSubType, filterBidding = ViewBag.CurrentBidding, filterRangeMi = ViewBag.CurrentRangeMi, filterRangeMx = ViewBag.CurrentRangeMx })"><span class="fa fa-close btn pull-right clear-filter"></span></a>
+                                }
+                                <div class="brands-name">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        @foreach (var item in Model.For)
+                                        {
+                                            <li><a href="@Url.Action("Properties", new { filterType = ViewBag.CurrentType, filterSuType = ViewBag.CurrentSubType, filterFor = item.Title, filterBidding = ViewBag.CurrentBidding, filterRangeMi = ViewBag.CurrentRangeMi, filterRangeMx = ViewBag.CurrentRangeMx })"> <span class="pull-right">(@item.Count)</span>@item.Title</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div><!--/brands_products-->
+                        }
+
+                        @if (Model.Biddings.Count() != 0)
+                        {
+                            <div class="brands_products">
+                                <!--brands_products-->
+                                <h2>Bidding</h2>
+                                @if (ViewBag.CurrentBidding != null)
+                                {
+                                    <a href="@Url.Action("Properties", new { filterType = ViewBag.CurrentType, filterSuType = ViewBag.CurrentSubType, filterFor = ViewBag.CurrentFor, filterRangeMi = ViewBag.CurrentRangeMi, filterRangeMx = ViewBag.CurrentRangeMx })"><span class="fa fa-close btn pull-right clear-filter"></span></a>
+                                }
+                                <div class="brands-name">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        @foreach (var item in Model.Biddings)
+                                        {
+                                            <li><a href="@Url.Action("Properties", new { filterType = ViewBag.CurrentType, filterSuType = ViewBag.CurrentSubType, filterFor = ViewBag.CurrentFor, filterBidding = item.Status, filterRangeMi = ViewBag.CurrentRangeMi, filterRangeMx = ViewBag.CurrentRangeMx })"> <span class="pull-right">(@item.Count)</span>@item.Status</a></li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div><!--/brands_products-->
+                        }
+
+                        @if (Model.Biddings.Count() != 0 && Model.For.Count() != 0)
+                        {
+                            <div class="price-range">
+                                <!--price-range-->
+                                <h2>Price Range</h2>
+                                @if (@ViewBag.CurrentRangeMi != null && @ViewBag.CurrentRangeMx != null)
+                                {
+                                    <a href="@Url.Action("Properties", new { filterType = ViewBag.CurrentType, filterSuType = ViewBag.CurrentSubType, filterFor = ViewBag.CurrentFor, filterBidding = ViewBag.CurrentBidding })"><span class="fa fa-close btn pull-right clear-filter"></span></a>
+                                }
+                                <div class="well text-center">
+                                    <input type="text" class="span2" value="10" data-slider-min="5" data-slider-max="500000" data-slider-step="5" data-slider-value="[5,450]" id="sl2"><br />
+                                    <b class="pull-left">$ 5</b> <b class="pull-right">$ 500000</b>
+                                </div>
+                            </div><!--/price-range-->
+                        }
+
+                        <div class="shipping text-center">
+                            <!--shipping-->
+                            <div id="sidead">
+                                <a href="">
+                                    <img src="" alt="advertisement">
+                                </a>
+                            </div>
+                        </div><!--/shipping-->
+
+                    </div>
+
+                                        </div>
+
+                                        <div class="col-sm-9 padding-right">
+                                            
+                                            <div class="btn-group">
+
+                                                <a href="#" id="list" class="btn btn-default btn-sm">
+                                                    <span class="glyphicon glyphicon-th-list">
+
+                                                    </span>List
+                                                </a> <a href="#" id="grid" class="btn btn-default btn-sm">
+                                                    <span class="glyphicon glyphicon-th"></span>Grid
+                                                </a>
+
+                                            </div>
+
+                                            <div class="features_items">
+                                                <!--features_items-->
+                                                <h2 class="title @Settings.ThemeColor text-center">Properties</h2>
+                                                @foreach (var item in Model.PropertyPhotoFilterable)
+                                                {
+                                                    <div class="col-sm-4 products" id="ListPID-@item.Property.ID">
+                                                        <div class="product-image-wrapper">
+                                                            <div class="single-products">
+                                                                <div class="productinfo @Settings.ThemeColor text-center product">
+                                                                    <div class="image">
+                                                                        @if (item.Photo != null)
+                                                                        {
+                                                                            <img class="small" src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <img class="small" src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Property.Title)" />
+                                                                        }
+                                                                        <div class="promotion">
+                                                                            <span class="loaction"> <i class="fa fa-map-marker"></i> @Html.DisplayFor(modelItem => item.Property.Address.City)</span>
+                                                                            <span class="status na-@item.Property.Status.ToString()">
+                                                                                @if (item.Property.Status.ToString().Equals("In_Discount"))
+                                                                                {
+                                                                                    @item.Property.Discount @("% OFF")
+                                                                                }
+                                                                                else if (!item.Property.Status.ToString().IsEmpty())
+                                                                                {
+                                                                                    @DisplayNameSys(item.Property.Status.GetType().GetField(item.Property.Status.ToString()));
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="description">
+                                                                        <h2 class="pro-price">@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                        <p>@Html.DisplayFor(modelItem => item.Property.Title)</p>
+                                                                        <a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })" class="btn btn-default add-to-cart hire-agent"><i class="fa fa-user"></i>Hire Agent</a>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="core-features clearfix">
+                                                                    <span class="area"><strong>@item.Property.AreaMeasurement</strong>Area</span>
+                                                                    @if (!item.Property.OfType.Title.Equals("Land"))
+                                                                    {
+                                                                        <span class="baths"><strong>@item.Property.Baths</strong>Baths</span>
+                                                                        <span class="beds"><strong>@item.Property.NumberOfRooms</strong>Beds</span>
+                                                                        <span class="parking"><strong>@item.Property.CarSpaces</strong>Parking</span>
+                                                                    }
+                                                                </div>
+
+                                                                <div class="product-overlay @Settings.ThemeColor">
+                                                                    <div class="overlay-content">
+                                                                        <h2>@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                        <p>@Html.DisplayFor(modelItem => item.Property.Title)</p>
+                                                                        <a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                            </div>
+                                                            <div class="@Settings.ThemeColor choose">
+                                                                <ul class="nav nav-pills nav-justified">
+                                                                    <li><a href="#ListPID-@item.Property.ID" class="addToWishlist" data-pid="@("11"+item.Property.ID)"><i class="fa fa-plus-square"></i>Add to wishlist</a></li>
+                                                                    <li><a href="#ListPID-@item.Property.ID" class="addToComparelist" data-pid="@item.Property.ID"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            
+                                                 
+                                            </div><!--features_items-->
+
+                                                @*Page @(Model.PropertyPhotoFilterable.PageCount < Model.PropertyPhotoFilterable.PageNumber ? 0 : Model.PropertyPhotoFilterable.PageNumber) of @Model.PropertyPhotoFilterable.PageCount*@
+
+                                                @Html.PagedListPager(Model.PropertyPhotoFilterable, page => Url.Action("Properties",
+                                                                                                       new { page, filterType = ViewBag.CurrentType, filterSuType = ViewBag.CurrentSubType, filterFor = ViewBag.CurrentFor, filterBidding = ViewBag.CurrentBidding, filterRangeMi = ViewBag.CurrentRangeMi, filterRangeMx = ViewBag.CurrentRangeMx }))
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+
+@section scripts{
+<script type="text/javascript" src="~/Scripts/AdsScriptTopBar.js"></script>
+<script type="text/javascript" src="~/Scripts/AdsScriptSideBar.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#list').click(function (event) { event.preventDefault(); $('.products').addClass('list-view');});
+
+        $('#grid').click(function (event) { event.preventDefault(); $('.products').removeClass('list-view');});
+
+        // Constantly Update value of the Price Range Slider on Start and Stop
+        var originalVal;
+
+        // Setting User Selected Range to Slider
+        var rangeArray = [@ViewBag.CurrentRangeMi, @ViewBag.CurrentRangeMx];
+        if (rangeArray[0] != null && rangeArray[1] != null) {
+            $('.span2').data('slider').setValue(rangeArray);
+            originalVal = rangeArray;
+        }
+
+        // Getting User Selected Range to Slider on Start
+        $('.span2').slider().on('slideStart', function (ev) {
+            originalVal = $('.span2').data('slider').getValue();     
+        });
+
+        // Getting User Selected Range to Slider on Stop
+        $('.span2').slider().on('slideStop', function (ev) {
+            var newVal = $('.span2').data('slider').getValue();
+            if (originalVal != newVal) {
+
+                ev.preventDefault();
+                window.location.replace =
+               '@Url.Action("Properties", "FrontEnd")' + '?filterRangeMi=' + newVal[0] + '&filterRangeMx=' + newVal[1] + '@if (ViewBag.CurrentType != null)
+                                                                                    {@("&filterType=" + @ViewBag.CurrentType)}@if (ViewBag.CurrentSubType != null)
+                                                                                                                              {@("&filterSuType=" + @ViewBag.CurrentSubType)}@if (ViewBag.CurrentFor != null)
+                                                                                                                                                                            {@("&filterFor=" + @ViewBag.CurrentFor)}@if (ViewBag.CurrentBidding != null)
+                                                                                                                                                                                                                    {@("&filterBidding=" + @ViewBag.CurrentBidding)}';
+
+            }
+        });
+
+    });
+</script>
+}

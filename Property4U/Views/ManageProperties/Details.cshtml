@@ -1,0 +1,215 @@
+﻿@model Property4U.Models.Property
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<div>
+    <h4>Property</h4>
+    <hr />
+    <dl class="dl-horizontal">
+@if (Request.IsAuthenticated && User.IsInRole("Agent"))
+{
+        <dt>
+            <label>AddressID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.ID)
+        </dd>
+}
+else { 
+        if (Request.IsAuthenticated && User.IsInRole("Admin"))
+        {
+        <dt>
+            <label>AddressID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.ID)
+        </dd>
+        }
+        <dt>
+            <label>Address</label>
+        </dt>
+
+        <dd>
+            @(Model.Address.Number + "-" + Model.Address.Block + " " + Model.Address.Name + ", " + Model.Address.Street + " " + Model.Address.City + ", " + Model.Address.State + " (" + Model.Address.ZipCode + ") " + Model.Address.Country)
+        </dd>
+    
+        <dt>
+            <label>AgentID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent.Id)
+        </dd>
+
+        <dt>
+            <label>Agent Name</label>
+        </dt>
+
+        <dd>
+            @(Model.Agent.FirstName + " " + Model.Agent.LastName)
+        </dd>
+
+        <dt>
+            <label>Agent Email</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent.Email)
+        </dd>
+}
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Seller)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Seller)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OfType.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OfType.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfRooms)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfRooms)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaMeasurement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaMeasurement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaUnits)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaUnits)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Features)
+        </dt>
+
+        <dd>
+            
+            @if (Model.Features.Count != 0)
+            {
+                var last = Model.Features.Last();
+                foreach (var Features in Model.Features)
+                {
+                    if (!Features.Equals(last))
+                    {
+                        @(Features.Title + ", ")
+                    }
+                    else
+                    {
+                         @(Features.Title)
+                    }
+                }
+            }
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.For)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.For)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AllowBidding)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AllowBidding)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Availability)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Availability)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Views)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Views)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Flags)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Flags)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PublishOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublishOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastEdit)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastEdit)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if (Request.IsAuthenticated && User.IsInRole("Agent"))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) @(" | ")
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>

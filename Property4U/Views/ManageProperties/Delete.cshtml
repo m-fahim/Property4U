@@ -1,0 +1,134 @@
+﻿@model Property4U.Models.Property
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Property</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <label>AddressID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Address.ID)
+        </dd>
+
+        <dt>
+            <label>AgentID</label>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Agent.Id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OfType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OfType)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NumberOfRooms)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NumberOfRooms)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaMeasurement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaMeasurement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AreaUnits)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AreaUnits)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.For)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.For)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AllowBidding)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AllowBidding)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Availability)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Availability)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Views)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Views)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PublishOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PublishOn)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

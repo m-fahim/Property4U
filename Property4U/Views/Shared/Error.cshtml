@@ -1,0 +1,27 @@
+﻿@model Property4U.Models.ErrorInfo
+
+@{
+    ViewBag.Title = "Problem";
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 padding-right error-page">
+                @if (Model != null)
+                {
+                    <h2>@Model.Message</h2>
+                    <p>@Model.Description</p>
+                }
+                else
+                {
+                    <h1>An Error Has Occured</h1>
+                    <p>An unexpected error occured on our website. The website administrator has been notified.</p>
+                }
+
+                <p><a href="@Url.Action("Index", "ControlDesk", new { Area = "" }, null)" class="btn-read-more">Go To Home Page</a></p>
+            </div>
+        </div>
+    </div>
+    </section>

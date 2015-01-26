@@ -1,0 +1,803 @@
+﻿@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    List<Property4U.Core.SysTask> Tasks = new List<Property4U.Core.SysTask>();
+    if (dbo.Database.Exists())
+    {
+        try {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+            Tasks.Add(Property4U.Core.TaskInfo.Info);
+        }
+        catch (Exception) {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error"); 
+        }
+    }
+    bool allow = (Settings == null)? false: true;
+}
+
+    <!DOCTYPE HTML>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="@if (allow){ @Settings.CompanyDescription; } else {  @("Property4U - Open Real Estate Solution") }">
+        <meta name="keywords" content="@if (allow){ @Settings.Keywords; } else {  @("quickly configurable, real estate 2.0, real estate bidding 2.0") }">
+        <meta name="author" content="@if (allow){ @Settings.WebsiteURL; } else {  @("www.property4u.com.pk") }">
+        <title>@ViewBag.Title - @if (allow){ @Settings.CompanyName; } else {  @("Property4U") }</title>
+        <link rel="shortcut icon" type="image/ico" href="@if (allow){ @Url.Content("~/Content/Uploads/Assets/" + @Settings.Favicon)} else { @Url.Content("~/Content/Uploads/Assets/P4U_favicon.png") }">
+        @Styles.Render("~/Content/bootstrapCSS")
+        @Styles.Render("~/Content/controldeskCSS")
+        @Styles.Render("~/Content/font-awesome")
+        @Styles.Render("~/Content/commonCSS")
+        @Scripts.Render("~/bundles/modernizr")
+
+    </head>
+    <body>
+
+        @if (Request.IsAuthenticated && !ViewContext.RouteData.Values["action"].ToString().ToLower().Equals("pu_samples"))
+        {
+    <!--  wrapper -->
+    <div class="@Settings.ThemeColor" id="wrapper">
+        <!-- navbar top -->
+        <nav class="navbar @Settings.ThemeColor navbar-default navbar-fixed-top" role="navigation" id="navbar">
+            <!-- navbar-header -->
+            <div class="navbar-header" style="background-color:lightgray; padding:6px 36px  3px 20px;">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="@Url.Action("Index", "ControlDesk")">
+                    <p class="company-logo-text">@Settings.CompanyName</p>
+                </a>
+            </div>
+            <!-- end navbar-header -->
+            <!-- navbar-top-links -->
+            <ul class="nav navbar-top-links navbar-right">
+                <!-- main dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" target="_blank" href="@Url.Action("Index", "FrontEnd")"><i class="fa fa-globe fa-2x"></i>
+                    </a>
+                </li>
+
+                @if (!User.IsInRole("Developer"))
+                {
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="top-label label label-danger" id="dropdown-message-items"></span><i class="fa fa-envelope fa-2x"></i>
+                        </a>
+                        <!-- dropdown-messages -->
+                        <ul class="dropdown-menu dropdown-messages" id="dropdown-messages">
+                        
+                        </ul>
+                        <!-- end dropdown-messages -->
+                    </li>
+                }
+
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="top-label label label-success">@Tasks.Count</span>  <i class="fa fa-tasks fa-2x"></i>
+                        </a>
+                        <!-- dropdown tasks -->
+                        <ul class="dropdown-menu dropdown-tasks">
+                            @foreach(var item in Tasks){
+                                
+                                <li>
+                                    <a href="#">
+                                        <div>
+                                            @{
+                                                double totalSecs = item.NextExecutionTime.Subtract(item.StartTime.AddHours(-5)).TotalSeconds;
+                                                double elapsedSecs = DateTime.Now.Subtract(item.StartTime.AddHours(-5)).TotalSeconds;
+                                                int percent = Convert.ToInt32(Math.Round((elapsedSecs / totalSecs) * 100));
+                                            }
+                                            <p>
+                                                <strong>@item.Name (@item.NextExecutionTime.ToString("hh:mm tt"))</strong>
+                                                <span class="pull-right text-muted">@percent% Passed</span>
+                                            </p>
+                                             
+                                            <div class="progress progress-striped active">
+                                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100" style="width: @percent%">
+                                                    <span class="sr-only">@percent% Passed</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </a>
+                                </li>
+                            }
+                            <li class="divider"></li>
+
+                            <li>
+                                <a class="text-center" href="#">
+                                    <strong>See All Tasks</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- end dropdown-tasks -->
+                    </li>
+                }
+
+                @if(!User.IsInRole("Developer")) {
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <span class="top-label label label-warning" id="dropdown-alert-items"></span>  <i class="fa fa-bell fa-2x"></i>
+                        </a>
+                        <!-- dropdown alerts <i class="fa fa-comment fa-fw"></i>-->
+                        <ul class="dropdown-menu dropdown-alerts" id="dropdown-alerts">
+                       
+                        </ul>
+                        <!-- end dropdown-alerts -->
+                    </li>
+                }
+
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user fa-2x"></i>
+                    </a>
+                    <!-- dropdown user-->
+                    <ul class="dropdown-menu dropdown-user ">
+                        <li>
+                            <a href="@Url.Action("Index", "Manage")"><i class="fa fa-user fa-fw"></i>User Profile</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Index", "Manage")"><i class="fa fa-gear fa-fw"></i>Settings</a>
+                        </li>
+                        @*<li>
+                                <a href="@Url.Action("Register", "Account")"><i class="fa fa-gear fa-fw"></i>Register</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Login", "Account")"><i class="fa fa-gear fa-fw"></i>Login</a>
+                            </li>*@
+                        <li class="divider"></li>
+                        @*<li>
+                                <a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
+                            </li>*@
+                        @Html.Partial("_LoginPartial")
+                    </ul>
+                    <!-- end dropdown-user -->
+                </li>
+                <!-- end main dropdown -->
+            </ul>
+            <!-- end navbar-top-links -->
+
+        </nav>
+        <!-- end navbar top -->
+        <!-- navbar side -->
+        <nav class="navbar-default navbar-static-side @Settings.ThemeColor" role="navigation" style="margin-top:20px">
+            <!-- sidebar-collapse -->
+            <div class="sidebar-collapse">
+                <!-- side-menu -->
+                <ul class="nav @Settings.ThemeColor" id="side-menu">
+                    <li>
+                        @*<!-- user image section-->
+                                    <div class="user-section">
+                                        <div class="user-section-inner">
+                                            <img src="@Url.Content("~/Content/Uploads/Assets/user.jpg")" alt="">
+                                        </div>
+                                        <div class="user-info">
+                                            <!-- user name from email -->
+                                            @{
+                        System.Net.Mail.MailAddress addr = new System.Net.Mail.MailAddress(User.Identity.Name);
+                        <div class="user-name">@addr.User</div>;
+
+                                            }
+                                            <div class="user-text-online">
+                                                <span class="user-circle-online btn btn-success btn-circle "></span>&nbsp;Online
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end user image section-->*@
+                    </li>
+                    <li class="sidebar-search">
+                        <!-- search section-->
+                        <div class="input-group custom-search-form">
+                            <input type="text" id="search-menu-items" class="form-control" placeholder="Search...">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <!--end search section-->
+                    </li>
+                    @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li id="menu-item">
+                            <a href="@Url.Action("Edit", "Configurations", new { id = "1" })"><i class="fa fa-wrench fa-fw fa-2x"></i>Configurations</a>
+                        </li>
+
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "RolesAdmin")"><i class=" fa fa-building-o fa-fw fa-2x"></i>Roles</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "UsersAdmin")"><i class="fa fa-users fa-fw fa-2x"></i>Users</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Ads")"><i class="fa fa-suitcase fa-fw fa-2x"></i>Ad<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Ads")">Ads</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Orders")">Orders</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "OfTypes")"><i class="fa fa-tags fa-fw fa-2x"></i>Type<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "OfTypes")">Types</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "OfSubTypes")">SubTypes</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+                         <li id="menu-item">
+                            <a href="@Url.Action("Index", "ManageProperties")"><i class="fa fa-home fa-fw fa-2x"></i>Properties</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Features")"><i class="fa fa-flask fa-fw fa-2x"></i>Features</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Renewals")"><i class="fa fa-repeat fa-fw fa-2x"></i>Renewals</a>
+                        </li>
+                        <li id="menu-item">
+                            <a id="nested-menu-item" href="@Url.Action("Index", "Feedbacks")"><i class="fa fa-comment-o fa-fw fa-2x"></i>Feedback<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Feedbacks")">Feedbacks</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Feedbacks", new { reportAbuse = true })">Flags</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+                    }
+                    else if (Request.IsAuthenticated && User.IsInRole("Agent"))
+                    {
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "ManageProperties")"><i class="fa fa-home fa-fw fa-2x"></i>Properties</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Reviews")"><i class="fa fa-star-half-full fa-fw fa-2x"></i>Reviews<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Reviews")">Reviews</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Replies")">Replies</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Addresses")"><i class="fa fa-map-marker fa-fw fa-2x"></i>Addresses</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Features")"><i class="fa fa-flask fa-fw fa-2x"></i>Features</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Photos")"><i class="fa fa-picture-o fa-fw fa-2x"></i>Photos</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Biddings")"><i class="fa fa-newspaper-o fa-fw fa-2x"></i>Biddings</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Responses")"><i class="fa fa-reply fa-fw fa-2x"></i>Response<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Responses")">Responses</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Requests")">Requests</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Orders")"><i class="fa fa-shopping-cart fa-fw fa-2x"></i>Orders</a>
+                        </li>
+                    }
+                    else if (Request.IsAuthenticated && User.IsInRole("Member"))
+                    {
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "ManageProperties")"><i class="fa fa-home fa-fw fa-2x"></i>Properties</a>
+                        </li>
+                        <li id="menu-item">
+                            <a id="nested-menu-item" href="@Url.Action("Index", "Requests")"><i class="fa fa-calendar-o fa-fw fa-2x"></i>Request<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Requests")">Requests</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Responses")">Responses</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+                        <li id="menu-item">
+                            <a id="nested-menu-item" href="@Url.Action("Index", "Feedbacks")"><i class="fa fa-comment-o fa-fw fa-2x"></i>Feedback<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Feedbacks")">Feedbacks</a>
+                                </li>
+                            </ul>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="@Url.Action("Index", "Feedbacks", new { reportAbuse = true })">Flags</a>
+                                </li>
+                            </ul>
+                            <!-- second-level-items -->
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Inquiry", "Biddings")"><i class="fa fa-newspaper-o fa-fw fa-2x"></i>Biddings</a>
+                        </li>
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Bids")"><i class="fa fa-bullhorn fa-fw fa-2x"></i>Bids</a>
+                        </li>
+                    }
+                    else if (Request.IsAuthenticated && User.IsInRole("Developer"))
+                    {
+                        <li id="menu-item">
+                            <a href="@Url.Action("Index", "Docs", new { area = "" }, null)"><i class="fa fa-code fa-fw fa-2x"></i>APIs</a>
+                        </li>
+                    }
+                </ul>
+                <!-- end side-menu -->
+            </div>
+            <!-- end sidebar-collapse -->
+        </nav>
+        <div id="page-content">
+                <div id="page-wrapper">
+                    @RenderBody()
+                    @*<div class="row">*@
+                    @*<footer id="footer">
+                        <p id="copyright">&copy; @DateTime.Now.Year - @Settings.CompanyName</p>
+                        <p id="powered-by">Powered by <b>Property4U</b></p>
+                    </footer>*@
+                    @*</div>*@
+                </div>
+                <div class="footer" id="foot">
+                    <div class="container">
+                        <p id="copyright">&copy; @DateTime.Now.Year - @Settings.CompanyName</p>
+                        <p id="powered-by">Powered by <b>Property4U</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        }
+        else
+        {
+            <div class="navbar @if (allow){@Settings.ThemeColor} navbar-default navbar-fixed-top" id="navbar-visiter">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="@Url.Action("Index", "FrontEnd")">
+                            <p class="company-logo-text">@if (allow){@Settings.CompanyName} else {@("Property4U");}</p>
+                        </a>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Home", "Index", "FrontEnd")</li>
+                            <li>@Html.ActionLink("About", "About", "FrontEnd")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "FrontEnd")</li>
+                        </ul>
+                        @Html.Partial("_LoginPartial")
+                    </div>
+                </div>
+            </div>
+            <div class="container body-content" id="page-content">
+                @RenderBody()
+                <hr />
+
+            </div>
+            @*<div class="row">
+                <footer id="footer">
+                    <p id="copyright">&copy; @DateTime.Now.Year - @if (allow){ @Settings.CompanyName; } else { @("Property4U") }</p>
+                    <p id="powered-by">Powered by <b>Property4U</b></p>
+                </footer>
+            </div>*@
+            <div class="footer" id="foot">
+                <div class="container">
+                    <p id="copyright">
+                        &copy; @DateTime.Now.Year - @if (allow)
+                        { @Settings.CompanyName;
+                        }
+                        else
+                        { @("Property4U") }
+                    </p>
+                    <p id="powered-by">Powered by <b>Property4U</b></p>
+                </div>
+            </div>
+                    <!-- end wrapper -->
+        }
+
+        <!-- end navbar side -->
+        @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="padding:4px"><img src="@Url.Content("~/Content/Uploads/Assets/" + Settings.Favicon)" alt="@Settings.ShortTitle" width="45" height="45" /></a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li>@Html.ActionLink("Configuration", "Edit", "Configurations", new { id = "1" }, null)</li>
+                            <li>@Html.ActionLink("Roles", "Index", "RolesAdmin")</li>
+                            <li>@Html.ActionLink("Users", "Index", "UsersAdmin")</li>
+                            <li>@Html.ActionLink("-Orders", "Details/5", "Orders")</li>
+                            <li>@Html.ActionLink("Ads", "Index", "Ads")</li>
+                            <li>@Html.ActionLink("Features", "Index", "Features")</li>
+                            <li>@Html.ActionLink("Renewals", "Index", "Renewals")</li>
+                        }
+                        else if (Request.IsAuthenticated && User.IsInRole("Agent"))
+                        {
+                            <li>@Html.ActionLink("Properties", "Index", "ManageProperties")</li>
+                            <li>@Html.ActionLink("Addresses", "Index", "Addresses")</li>
+                            <li>@Html.ActionLink("Features", "Index", "Features")</li>
+                            <li>@Html.ActionLink("Orders", "Index", "Orders")</li>
+                            <li>@Html.ActionLink("Photos", "Index", "Photos")</li>
+                            <li>@Html.ActionLink("Biddings", "Index", "Biddings")</li>
+                            <li>@Html.ActionLink("-Requests", "Details/5", "Requests")</li>
+                            <li>@Html.ActionLink("Responses", "Index", "Responses")</li>
+                        }
+                        else if (Request.IsAuthenticated && User.IsInRole("Member"))
+                        {
+                            <li>@Html.ActionLink("Requests", "Index", "Requests")</li>
+                            <li>@Html.ActionLink("Feedbacks", "Index", "Feedbacks")</li>
+                            <li>@Html.ActionLink("Bids", "Index", "Bids")</li>
+                        }
+                        else if (Request.IsAuthenticated && User.IsInRole("Developer"))
+                        {
+
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        }
+
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
+            </div>
+        </div>*@
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")
+        @Scripts.Render("~/bundles/controldeskJS")
+        @Scripts.Render("~/bundles/commonCookie")
+
+            @if(User.IsInRole("Admin")) {
+                <script type="text/javascript">
+                var tokenKey = 'accessToken';
+                var token = $.cookie(tokenKey);
+                var headers = {};
+                if (token) {
+                    headers.Authorization = 'Bearer ' + token;
+                }
+                $.ajax({
+                    url: location.protocol + "//" + location.host + '/api/Orders/GetRecentPendingOrders',
+                    headers: headers,
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#dropdown-messages-items").text(data.length);
+                        // 3 Recent Requests using slice(0,3)
+                        $.each(data.slice(0, 3), function (k, v) {
+                            var orderOn = jQuery.timeago(new Date(v.Date));
+                            var li = $('<li />')
+                            $("#dropdown-messages").append(li);
+                            li.append($(
+                                '<a href="' + location.protocol + "//" + location.host + '/Orders/Details/' + v.ID + '">'
+                                   +'<div>'
+                                       + '<strong><span class=" label label-danger">' + v.Agent.FullName + '</span></strong>'
+                                       +'<span class="pull-right text-muted">'
+                                           + '<em>' + orderOn + '</em>'
+                                       +'</span>'
+                                   +'</div>'
+                                   + '<div>' + v.Title + ': ' + v.Description + '</div>'
+                               + '</a>'));
+                            $("#dropdown-messages").append('<li class="divider"></li>');
+                        });
+                        if(data.length > 3){
+                            $("#dropdown-messages").append(
+                                '<li>'
+                                    + '<a class="text-center" href="' + location.protocol + "//" + location.host + '/Orders">'
+                                        + '<strong>View All Orders</strong> '
+                                        + '<i class="fa fa-angle-right"></i>'
+                                    + '</a>'
+                                + '</li>'
+                                );
+                        } else if (data.length == 0) {
+                            $("#dropdown-messages").append(
+                                '<li>'
+                                     + '<a class="text-center" href="#">'
+                                        + '<strong>No Pending Orders</strong> '
+                                    + '</a>'
+                                + '</li>'
+                                );
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url: location.protocol + "//" + location.host + '/api/Feedbacks/GetRecentFeedbacks',
+                    headers: headers,
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#dropdown-alert-items").text(data.length);
+                        // 3 Recent Requests using slice(0,3)
+                        $.each(data.slice(0, 3), function (k, v) {
+                            var fedOn = jQuery.timeago(new Date(v.FeedbackOn));
+                            var li = $('<li />')
+                            $("#dropdown-alerts").append(li);
+                            li.append($(
+                                '<a href="' + location.protocol + "//" + location.host + '/Feedbacks/Details/' + v.ID + '?reportAbuse=True">'
+                                   + '<div>'
+                                       + '<strong><span class=" label label-warning">Property ID: ' + v.PropertyID + '</span></strong>'
+                                       + '<span class="pull-right text-muted">'
+                                           + '<em>' + fedOn + '</em>'
+                                       + '</span>'
+                                   + '</div>'
+                                   + '<div>' + v.Title + '</div>'
+                               + '</a>'));
+                            $("#dropdown-alerts").append('<li class="divider"></li>');
+                        });
+                        if (data.length > 3) {
+                            $("#dropdown-alerts").append(
+                                '<li>'
+                                    + '<a class="text-center" href="'+ location.protocol + "//" + location.host + '/Feedbacks?reportAbuse=True">'
+                                        + '<strong>View All Flags</strong> '
+                                        + '<i class="fa fa-angle-right"></i>'
+                                    + '</a>'
+                                + '</li>'
+                                );
+                        } else if (data.length == 0) {
+                            $("#dropdown-alerts").append(
+                                '<li>'
+                                     + '<a class="text-center" href="#">'
+                                        + '<strong>No Flags</strong> '
+                                    + '</a>'
+                                + '</li>'
+                                );
+                        }
+                    }
+                });
+                </script>
+            }else if(User.IsInRole("Agent")){
+                <script type="text/javascript">
+                    var tokenKey = 'accessToken';
+                    var token = $.cookie(tokenKey);
+                    var headers = {};
+                    if (token) {
+                        headers.Authorization = 'Bearer ' + token;
+                    }
+                    $.ajax({
+                        url: location.protocol + "//" + location.host + '/api/Requests/GetRecentPendingRequests',
+                        headers: headers,
+                        dataType: 'json',
+                        success: function (data) {
+                            $("#dropdown-message-items").text(data.length);
+                            // 3 Recent Requests using slice(0,3)
+                            $.each(data.slice(0, 3), function (k, v) {
+                                var reqOn = jQuery.timeago(new Date(v.RequestOn));
+                                var li = $('<li />')
+                                $("#dropdown-messages").append(li);
+                                       li.append($(
+                                       '<a href="' + location.protocol + "//" + location.host + '/Requests/Details/' + v.ID + '">'
+                                           + '<div>'
+                                               + '<strong><span class=" label label-danger">' + v.Member.FullName + '</span></strong>'
+                                               + '<span class="pull-right text-muted">'
+                                                   + '<em>' + reqOn + '</em>'
+                                               + '</span>'
+                                           + '</div>'
+                                           + '<div>' + v.Description + '</div>'
+                                       + '</a>'));
+                                       $("#dropdown-messages").append('<li class="divider"></li>');
+                            });
+                            if (data.length > 3) {
+                                $("#dropdown-messages").append(
+                                    '<li>'
+                                        + '<a class="text-center" href="' + location.protocol + "//" + location.host + '/Requests">'
+                                            + '<strong>View All Requests</strong> '
+                                            + '<i class="fa fa-angle-right"></i>'
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            } else if (data.length == 0) {
+                                $("#dropdown-messages").append(
+                                    '<li>'
+                                            + '<a class="text-center" href="#">'
+                                            + '<strong>No Messages</strong> '
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            }
+                        }
+                    });
+
+                    $.ajax({
+                        url: location.protocol + "//" + location.host + '/api/Orders/GetAllAlerts',
+                        headers: headers,
+                        dataType: 'json',
+                        success: function (data) {
+                            var allAlerts = 0;
+                            var alertClass;
+                            $.each(data, function (k, v) {
+
+                                if (v.Title == "Orders (Approved)")
+                                    alertClass = "fa-shopping-cart";
+                                else if(v.Title == "Reviews")
+                                    alertClass = "fa-star-half-full";
+                                else
+                                    alertClass = "fa-repeat";
+
+                                var li = $('<li />')
+                                $("#dropdown-alerts").append(li);
+                                li.append($(
+                                    '<a href="' + location.protocol + "//" + location.host + '/Bids/Details/' + v.Title + '">'
+                                       + '<div>'
+                                           + '<i class="fa '+ alertClass +' fa-fw"></i>' + v.Title 
+                                           + '<span class="pull-right text-muted small">'
+                                               + '<em>' + v.Count + '</em>'
+                                           + '</span>'
+                                       + '</div>'
+                                   + '</a>'
+                                   ));
+                                $("#dropdown-alerts").append('<li class="divider"></li>');
+                                allAlerts = allAlerts + v.Count;
+                            });
+
+                            $("#dropdown-alert-items").text(allAlerts);
+
+                            if (data.length == 0) {
+                                $("#dropdown-alerts").append(
+                                    '<li>'
+                                         + '<a class="text-center" href="#">'
+                                            + '<strong>No Alerts</strong> '
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            }
+                        }
+                    });
+                </script>
+            } else if(User.IsInRole("Member")) {
+                <script type="text/javascript">
+                    var tokenKey = 'accessToken';
+                    var token = $.cookie(tokenKey);
+                    var headers = {};
+                    if (token) {
+                        headers.Authorization = 'Bearer ' + token;
+                    }
+                    $.ajax({
+                        url: location.protocol + "//" + location.host + '/api/Responses/GetRecentAgreeResponses',
+                        headers: headers,
+                        dataType: 'json',
+                        success: function (data) {
+                            $("#dropdown-message-items").text(data.length);
+                            // 3 Recent Requests using slice(0,3)
+                            $.each(data.slice(0, 3), function (k, v) {
+                                var resOn = jQuery.timeago(new Date(v.ResponseOn));
+                                var li = $('<li />')
+                                $("#dropdown-messages").append(li);
+                                li.append($(
+                                    '<a href="'+ location.protocol + "//" + location.host +'/Responses/Details/'+ v.ID +'">'
+                                       +'<div>'
+                                           + '<strong><span class=" label label-danger">' + v.Agent.FullName + '</span></strong>'
+                                           +'<span class="pull-right text-muted">'
+                                               + '<em>' + resOn + '</em>'
+                                           +'</span>'
+                                       +'</div>'
+                                       + '<div>' + v.Description + '</div>'
+                                   + '</a>'));
+                                $("#dropdown-messages").append('<li class="divider"></li>');
+                            });
+                            if(data.length > 3){
+                                $("#dropdown-messages").append(
+                                    '<li>'
+                                        + '<a class="text-center" href="' + location.protocol + "//" + location.host + '/Responses">'
+                                            + '<strong>View All Responses</strong> '
+                                            + '<i class="fa fa-angle-right"></i>'
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            } else if (data.length == 0) {
+                                $("#dropdown-messages").append(
+                                    '<li>'
+                                         + '<a class="text-center" href="#">'
+                                            + '<strong>No Responses</strong> '
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            }
+                        }
+                    });
+
+                    $.ajax({
+                        url: location.protocol + "//" + location.host + '/api/Bids/GetWonBids',
+                        headers: headers,
+                        dataType: 'json',
+                        success: function (data) {
+                            $("#dropdown-alert-items").text(data.length);
+                            // 3 Recent Requests using slice(0,3)
+                            $.each(data.slice(0, 3), function (k, v) {
+
+                                if ($("#dropdown-alert-items").hasClass('label-warning')) {
+                                    $("#dropdown-alert-items").removeClass('label-warning').addClass('label-success');
+                                }
+
+                                var bidOn = jQuery.timeago(new Date(v.BidOn));
+                                var li = $('<li />')
+                                $("#dropdown-alerts").append(li);
+                                li.append($(
+                                    '<a href="' + location.protocol + "//" + location.host + '/Bids/Details/' + v.ID + '">'
+                                       + '<div>'
+                                           + '<strong><span class=" label label-success">$' + v.Price + '</span></strong>'
+                                           + '<span class="pull-right text-muted">'
+                                               + '<em>' + bidOn + '</em>'
+                                           + '</span>'
+                                       + '</div>'
+                                       + '<div><strong>PropertyID: ' + v.Bidding.PropertyID + "</strong> - " + v.Title + '</div>'
+                                   + '</a>'
+                                   ));
+                                $("#dropdown-alerts").append('<li class="divider"></li>');
+                            });
+                            if (data.length > 3) {
+                                $("#dropdown-alerts").append(
+                                    '<li>'
+                                        + '<a class="text-center" href="' + location.protocol + "//" + location.host + '/Bids">'
+                                            + '<strong>View All Bids</strong> '
+                                            + '<i class="fa fa-angle-right"></i>'
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            } else if (data.length == 0) {
+                                $("#dropdown-alerts").append(
+                                    '<li>'
+                                         + '<a class="text-center" href="#">'
+                                            + '<strong>No Won Bids</strong> '
+                                        + '</a>'
+                                    + '</li>'
+                                    );
+                            }
+                        }
+                    });
+                </script>
+            } 
+        @RenderSection("scripts", required: false)
+
+</body>
+</html>

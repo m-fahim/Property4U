@@ -1,0 +1,259 @@
+﻿@model Property4U.Models.SearchBiddingsPropertyPhViewModel
+@using PagedList.Mvc;
+
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+@{
+    ViewBag.Title = "Wishlist";
+}
+
+@helper DisplayNameSys(System.Reflection.FieldInfo myfield)
+{
+    dynamic field = myfield;
+
+    if (field != null)
+    {
+        var display = ((System.ComponentModel.DataAnnotations.DisplayAttribute[])field.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)).FirstOrDefault();
+        if (display != null)
+        {
+            @display.Name
+        }
+    }
+}
+
+@*<div class="row">
+        <!-- Page Header -->
+        <div class="col-lg-12">
+            <h3 class="page-header">@ViewBag.Message</h3>
+        </div>
+        <!--End Page Header -->
+    </div>
+
+    <hgroup>
+            <h3>@ViewBag.Message</h3>
+        </hgroup>
+        <br />*@
+
+<section class="@Settings.ThemeColor">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-12 padding-right">
+                <div class="features_items">
+                    <h2 class="title @Settings.ThemeColor text-center">@ViewBag.Message <span class="clearWislist pull-right"><a href="#" id="clearWishlist">Clear</a></span></h2>
+
+                    @{
+                        var WishlistSectionP = (ViewBag.CurrentWishlistSection == "properties") ? "active" : "";
+                        var WishlistSectionB = (ViewBag.CurrentWishlistSection == "biddings") ? "active" : "";
+                    }
+
+                    <div class="category-tab @Settings.ThemeColor shop-details-tab addToCompare-text-color">
+                        <!--category-tab-->
+                        <div class="col-sm-12">
+                            <ul class="nav nav-tabs">
+                                <li class="@WishlistSectionP"><a href="#properties" data-toggle="tab">Properties</a></li>
+                                <li class="@WishlistSectionB"><a href="#biddings" data-toggle="tab">Biddings</a></li>
+                            </ul>
+                        </div>
+                        <div class="tab-content">
+
+                            <div class="tab-pane fade @WishlistSectionP in @Settings.ThemeColor" id="properties">
+
+                                <div class="container">
+                                    @if (Model.PropertyPhotoPaged != null)
+                                    {
+                                        foreach (var item in Model.PropertyPhotoPaged)
+                                        {
+                                            <div class="col-sm-3 products list-view" id="ListPID-@item.Property.ID">
+
+                                                <div class="product-image-wrapper">
+                                                    <div class="single-products">
+                                                        <div class="productinfo @Settings.ThemeColor text-center product">
+                                                            <div class="image">
+                                                                @if (item.Photo != null)
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Property.Title)" />
+                                                                }
+
+                                                                <div class="promotion">
+                                                                    <span class="loaction"> <i class="fa fa-map-marker"></i> @Html.DisplayFor(modelItem => item.Property.Address.City)</span>
+                                                                    <span class="status na-@item.Property.Status.ToString()">
+                                                                        @if (item.Property.Status.ToString().Equals("In_Discount"))
+                                                                        {
+                                                                            @item.Property.Discount @("% OFF")
+                                                                        }
+                                                                        else if (!item.Property.Status.ToString().IsEmpty())
+                                                                        {
+                                                                            @DisplayNameSys(item.Property.Status.GetType().GetField(item.Property.Status.ToString()));
+                                                                        }
+                                                                    </span>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="description">
+                                                                <h2 class="pro-price">@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                <p>@Html.DisplayFor(modelItem => item.Property.Title)</p>
+                                                                <p><i class="fa fa-user"></i> @Html.DisplayFor(modelItem => item.Property.Agent.FirstName) @Html.DisplayFor(modelItem => item.Property.Agent.LastName)</p>
+                                                                <a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })" class="btn btn-default add-to-cart hire-agent"><i class="fa fa-user"></i>Hire Agent</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="core-features clearfix">
+                                                            <span class="area"><strong>@item.Property.AreaMeasurement</strong>Area</span>
+                                                            @if (!item.Property.OfType.Title.Equals("Land"))
+                                                            {
+                                                                <span class="baths"><strong>@item.Property.Baths</strong>Baths</span>
+                                                                <span class="beds"><strong>@item.Property.NumberOfRooms</strong>Beds</span>
+                                                                <span class="parking"><strong>@item.Property.CarSpaces</strong>Parking</span>
+                                                            }
+                                                        </div>
+                                                        @*<div class="product-overlay">
+                                                                <div class="overlay-content">
+                                                                    <h2>@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                    <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                                </div>
+                                                            </div>*@
+                                                    </div>
+                                                    <div class="@Settings.ThemeColor choose">
+                                                        <ul class="nav nav-pills nav-justified">
+                                                            <li><a href="#" class="removeFromWishlist" data-pid="@("11"+item.Property.ID)"><i class="fa fa-minus-square"></i>Remove from wishlist</a></li>
+                                                            <li><a href="#ListPID-@item.Property.ID" class="addToComparelist" data-pid="@item.Property.ID"><i class="fa fa-plus-square"></i>Add to compare</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+
+                                </div>
+                                @if (Model.PropertyPhotoPaged != null)
+                                {
+                                    @Html.PagedListPager(Model.PropertyPhotoPaged, pageProperty => Url.Action("Wishlist", new { pageProperty, WishlistSection = "properties", WishlistItems = ViewBag.CurrentItems }))
+                                }                        
+                        </div>
+
+                            <div class="tab-pane fade @WishlistSectionB in @Settings.ThemeColor" id="biddings">
+                                <div class="container">
+                                    @if (Model.BiddingsPhotoPaged != null)
+                                    {
+                                        foreach (var item in Model.BiddingsPhotoPaged)
+                                        {
+                                            <div class="col-sm-3 products list-view">
+
+                                                <div class="product-image-wrapper">
+                                                    <div class="single-products">
+                                                        <div class="productinfo @Settings.ThemeColor text-center product">
+                                                            <div class="image">
+                                                                @if (item.Photo != null)
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Bidding.Title)" />
+                                                                }
+
+                                                                <div class="promotion">
+                                                                    <span class="loaction"> <i class="fa fa-map-marker"></i> @Html.DisplayFor(modelItem => item.Property.Address.City)</span>
+                                                                    @if (item.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                                                    {
+                                                                        <span class="status na-Free_Hold">
+                                                                            @item.Bidding.BiddingStatus.ToString()
+                                                                        </span>
+                                                                    }
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="description">
+                                                                <h2 class="pro-price">@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                                <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                                <p><i class="fa fa-user"></i> @Html.DisplayFor(modelItem => item.Property.Agent.FirstName) @Html.DisplayFor(modelItem => item.Property.Agent.LastName)</p>
+                                                                @if (item.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                                                {
+                                                                    <p class="active-until status-Closed">@Html.DisplayFor(modelItem => item.Bidding.EndDate)</p>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <p class="active-until">@Html.DisplayFor(modelItem => item.Bidding.EndDate)</p>
+                                                                }
+                                                                <a href="@Url.Action("PlaceBid", "FrontEnd", new { BID = @item.Bidding.ID })" class="btn btn-default add-to-cart">
+                                                                    <i class="fa fa-bullhorn"></i>
+                                                                    @{
+                                            if (item.Bidding.BiddingStatus.ToString().Equals("Closed"))
+                                            {
+                                                @("Details");
+                                            }
+                                            else
+                                            {
+                                                @("Place Bid");
+                                            }
+                                                                    }
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="core-features clearfix">
+                                                            <span class="area"><strong>@item.Property.AreaMeasurement</strong>Area</span>
+                                                            @if (!item.Property.OfType.Title.Equals("Land"))
+                                                            {
+                                                                <span class="baths"><strong>@item.Property.Baths</strong>Baths</span>
+                                                                <span class="beds"><strong>@item.Property.NumberOfRooms</strong>Beds</span>
+                                                                <span class="parking"><strong>@item.Property.CarSpaces</strong>Parking</span>
+                                                            }
+                                                        </div>
+                                                        @*<div class="product-overlay">
+                                                <div class="overlay-content">
+                                                    <h2>@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                    <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                    <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                </div>
+                                            </div>*@
+                                                    </div>
+                                                    <div class="@Settings.ThemeColor choose">
+                                                        <ul class="nav nav-pills nav-justified">
+                                                            <li><a href="#" class="removeFromWishlist" data-pid="@("22"+item.Bidding.ID)"><i class="fa fa-minus-square"></i>Remove from wishlist</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                                @if (Model.BiddingsPhotoPaged != null)
+                                {
+                                    @Html.PagedListPager(Model.BiddingsPhotoPaged, pageBidding => Url.Action("Wishlist", new { pageBidding, WishlistSection = "biddings", WishlistItems = ViewBag.CurrentItems }))
+                                }
+                            </div>
+
+                        </div>
+                    </div><!--/category-tab-->
+                </div><!--features_items-->
+            </div>
+        </div>
+    </div>
+</section>

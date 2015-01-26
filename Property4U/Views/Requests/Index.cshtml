@@ -1,0 +1,91 @@
+﻿@model IEnumerable<Property4U.Models.Request>
+
+@{
+    ViewBag.Title = "Requests";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@if (Request.IsAuthenticated && User.IsInRole("Member"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PropertyID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VisitingDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VisitingTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequestOn)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RequestStatus)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Property.ID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VisitingDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.VisitingTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RequestOn)
+        </td>
+        <td>
+            <span class="progress status-@item.RequestStatus">
+                @Html.DisplayFor(modelItem => item.RequestStatus)
+            </span>
+        </td>
+        <td>
+            @if (Request.IsAuthenticated && User.IsInRole("Member"))
+            {
+                @Html.ActionLink("Edit", "Edit", new { id=item.ID }) @(" | ")
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID }) @(" | ")
+            }
+            @Html.ActionLink("Details", "Details", new { id = item.ID })
+           
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,177 @@
+﻿@model Property4U.Models.CompareViewModel
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+@{
+    ViewBag.Title = "Property Comparison";
+}
+
+@helper DisplayNameSys(System.Reflection.FieldInfo myfield)
+{
+    dynamic field = myfield;
+
+    if (field != null)
+    {
+        var display = ((System.ComponentModel.DataAnnotations.DisplayAttribute[])field.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)).FirstOrDefault();
+        if (display != null)
+        {
+            @display.Name
+        }
+    }
+}
+
+@*<div class="row">
+        <!-- Page Header -->
+        <div class="col-lg-12">
+            <h3 class="page-header">@ViewBag.Message</h3>
+        </div>
+        <!--End Page Header -->
+    </div>
+
+    <hgroup>
+        <h3>@ViewBag.Message</h3>
+    </hgroup>*@
+
+<section>
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-12 padding-right">
+                <div class="features_items">
+                    <!--features_items-->
+                    <h2 class="title @Settings.ThemeColor text-center">@ViewBag.Message<span class="clearComparelist pull-right"><a href="#" id="clearComparelist">Clear</a></span></h2>
+                    <section id="flip-scroll">
+                        <table class="table table-striped table-condensed cf">
+                            <thead class="cf">
+                                <tr>
+                                    <th class="property-details-label"></th>
+                                    <th>Type</th>
+                                    <th class="numeric">For</th>
+                                    <th class="numeric">Area</th>
+                                    <th class="numeric">Covered Area</th>
+                                    <th class="numeric">Dimensions (L x W)</th>
+                                    <th class="numeric">Seller</th>
+                                    <th class="numeric">Available From</th>
+                                    <th class="numeric">Construction Date</th>
+                                    <th class="numeric">Location</th>
+                                    <th class="numeric">Furnished</th>
+                                    <th class="numeric">Floor No</th>
+                                    <th class="numeric">Total Floors</th>
+                                    <th class="numeric">Flooring</th>
+                                    <th class="numeric">Car Spaces</th>
+                                    <th class="numeric">Bedrooms</th>
+                                    <th class="numeric">Baths</th>
+                                    <th class="numeric">Kitchens</th>
+                                    <th class="numeric">Living Rooms</th>
+                                    <th class="numeric">Drawing Rooms</th>
+                                    <th class="numeric">Dining Rooms</th>
+                                    <th class="numeric">Store Rooms</th>
+                                    <th class="numeric">Servant Quarters</th>
+                                    @*<th></th>*@
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var item in Model.PropertyPhotoReview)
+                            {
+                                <tr class="remove-padding">
+                                    <td>
+                                        <div class="@Settings.ThemeColor property-info" id="listpid-@item.Property.ID">
+                                            <div class="img-background">
+                                                <a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })">
+                                                    @if (item.Photo != null)
+                                                    {
+                                                        <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Property.Title)" />
+                                                    }
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })"> <h5>@Html.DisplayFor(modelItem => item.Property.Title)</h5></a>
+                                                <div>
+                                                    <input type="hidden" class="rating" data-start="1" data-stop="6" value="@Html.DisplayFor(modelItem => item.PropertyRating)" readonly="readonly" />
+                                                    <small><a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })">(@item.ReviewsCount reviews)</a></small>
+                                                </div>
+                                                <p><a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })" class="btn btn-default add-to-cart hire-agent"><i class="fa fa-user"></i>Hire Agent</a></p>
+                                                <p><a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })"> Price: @Html.DisplayFor(modelItem => item.Property.Price)</a></p>
+                                                <p><a href="#ListPID-@item.Property.ID" class="addToWishlist" data-pid="@("11"+item.Property.ID)"><i class="fa fa-plus-square"></i>Add to wishlist</a></p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.SubType)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.For)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.AreaMeasurement) @DisplayNameSys(item.Property.AreaUnits.GetType().GetField(item.Property.AreaUnits.ToString()))</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.CoveredAreaMeasurement) @DisplayNameSys(item.Property.AreaUnits.GetType().GetField(item.Property.CoveredAreaUnits.ToString()))</td>
+                                    <td class="numeric">@item.Property.AreaDiLength x @item.Property.AreaDiWidth</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.Seller)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.PublishOn)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.Build)</td>
+                                    <td class="numeric">@item.Property.Address.Number-@item.Property.Address.Block @item.Property.Address.AreaName, @item.Property.Address.City</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.Furnished)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.FloorNo)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.Stories)</td>
+                                    <td class="numeric">
+                                        @if (item.Property.Flooring != null)
+                                        {
+                                            @DisplayNameSys(item.Property.Flooring.GetType().GetField(item.Property.Flooring.ToString()))
+                                        }
+                                    </td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.CarSpaces)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.NumberOfRooms)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.Baths)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.Kitchens)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.LivingRooms)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.DrawingRooms)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.DiningRooms)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.StoreRooms)</td>
+                                    <td class="numeric">@Html.DisplayFor(modelItem => item.Property.ServantQuarters)</td>
+                                    <td>
+                                        <div class="@Settings.ThemeColor choose">
+                                            <ul class="nav nav-pills nav-justified">
+                                                <li>
+                                                    <a href="#" class="removeFromComparelist" data-pid="@item.Property.ID"><i class="fa fa-minus-square"></i>Remove</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+            </div>
+        </div>
+
+</section>
+
+@section scripts{
+
+    <script type="text/javascript" src="~/Scripts/bootstrap-rating.js"></script>
+    <script type="text/javascript">
+          
+    </script>
+}

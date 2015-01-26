@@ -1,0 +1,150 @@
+﻿/*body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}*/
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 70px;
+    padding-bottom: 20px;
+}
+
+#foot {
+    background-color:lightgray;
+    padding: 5px 5px 0px 5px;
+    border-top: 2px solid #e4e4e4;
+    position:fixed; 
+    width:100%; 
+    bottom:0;
+    z-index:500;
+}
+
+#foot .container {
+    max-width:100% !important;
+}
+
+#copyright{
+    float: left;
+    margin-left:-2px;
+    color: #515151;
+}
+
+#powered-by {
+    float: right;
+    margin-right:-2px;
+    /*background-color:lightgray;*/
+    color:#797979;
+}
+
+#page-content #hr {
+    margin: 0;
+    border: 0;
+    border-top: 3px solid #e4e4e4;
+}
+
+/* Progress of System Tasks - P4U */
+
+.progress {
+    padding: 4px;
+    color:white;
+    font-weight:bold;
+}
+
+.status-Winner, .status-Approved, .status-Active, .status-Allowed, .status-Yes, .status-Agree {
+    background-color:#2ecc71;
+}
+.status-Process, .status-UpComing {
+    background-color:#2980b9;
+}
+.status-Accepted {
+    background-color:#1abc9c;
+}
+.status-Rejected, .status-Blocked, .status-Inactive, .status-Disabled , .status-No, .status-Disagree  {
+    background-color:#e74c3c;
+}
+.status-Pending {
+    background-color:#3498db;
+}
+.status-Closed, .status-Expired {
+    background-color:gray !important;
+}
+
+/* Congfiguration P4U jQuery UI Tabs header style */
+.ui-tabs-nav {
+    border-bottom: #d4d4d4 0.5px solid !important;
+}
+.ui-tabs .ui-tabs-panel {
+    padding-top: 2em;
+}
+.ui-tabs-nav .ui-state-active a {
+    height:auto !important;
+}
+.ui-tabs-nav .ui-state-default a{
+    height:auto !important;
+}
+.ui-tabs .ui-widget-content {
+    border:none !important;
+}
+
+.user-name{max-width: 130px; max-height: 60px; overflow: hidden; -ms-text-overflow: clip; text-overflow: clip;}
+
+/* Preview Configurations in Search Engine  */
+.se-content { margin: 48px 0px 12px 0px; padding: 12px; border: 1px solid #adadad; border-image: none;  background-color: #f8f8f8;}
+.se-title { font-family: Arial, Helvetica, sans-serif; font-size:18px; color: #1e0fbe; white-space: nowrap; text-overflow: ellipsis; display: block; overflow: hidden }
+.se-url { font-family: Arial, Helvetica, sans-serif; font-size:13px; color: #006621; margin-top: -4px }
+.se-desc { font-family: Arial, Helvetica, sans-serif; font-size:13px; color: #545454; margin-top: -2px; line-height: 18px }
+      
+
+#transparent-bg {
+   background-color: rgba(0,0,0,0.2);
+   max-width:120px;
+   max-height:70px;
+}
+
+#flexImgSize {
+   max-width:120px;
+   max-height:70px;
+}
+
+#flexImgThumb {
+   max-width:100px;
+   max-height:70px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-errors li {
+    list-style: none;
+}
+
+.validation-summary-valid {
+    display: none;
+}

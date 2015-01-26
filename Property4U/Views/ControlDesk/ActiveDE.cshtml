@@ -1,0 +1,351 @@
+﻿@model Property4U.Models.ControlDeskActiveDEPropertyViewModels
+
+@{
+    ViewBag.Title = "Control Desk";
+}
+
+<div class="row">
+    <!-- Page Header -->
+    <div class="col-lg-12">
+        <h1 class="page-header">@ViewBag.Title</h1>
+    </div>
+    <!--End Page Header -->
+</div>
+
+@*<div class="row">
+    <!-- Welcome -->
+    <div class="col-lg-12">
+        <div class="alert alert-info">
+            <i class="fa fa-folder-open"></i><b>&nbsp;Hello ! </b>Welcome Back <b>Jonny Deen </b>
+            <i class="fa  fa-pencil"></i><b>&nbsp;2,000 </b>Support Tickets Pending to Answere. nbsp;
+        </div>
+    </div>
+    <!--end  Welcome -->
+</div>*@
+
+
+<div class="row">
+    <!--quick info section -->
+    <div class="col-lg-3">
+        <div class="alert alert-info text-center">
+            <i class="fa fa-hdd-o fa-3x"></i>&nbsp;<b>@Model.ControlDeskActiveDE.DBSize </b>DB Size
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="alert alert-warning text-center">
+            <i class="fa fa-file-o fa-3x"></i>&nbsp;<b>@Model.ControlDeskActiveDE.APIsDoc </b>API Categories
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="alert alert-success text-center">
+            <i class="fa fa-users fa-3x"></i>&nbsp;<b>@Model.ControlDeskActiveDE.DevelopersCount </b>Authorize Developers
+        </div>
+    </div>
+    <!--end quick info section -->
+</div>
+
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Test Drive Tabs -->
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Test Drive
+            </div>
+            <div class="panel-body">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#asp" data-toggle="tab">ASP.NET</a>
+                    </li>
+                    <li>
+                        <a href="#jquery" data-toggle="tab">jQuery</a>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade in active" id="asp">
+                        <h4>Code</h4>
+                        <pre class="prettyprint">
+    &commat;model IEnumerable&lt;Property4u.Models.Property&gt;
+    &commat;{
+        viewbag.title="Property";
+    }<br />
+    &lt;div class=&quot;table-responsive&quot;&gt;
+        &lt;table class=&quot;table table-bordered table-hover table-striped&quot;&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;ID&lt;/th&gt;
+                    &lt;th&gt;Title&lt;/th&gt;
+                    &lt;th&gt;Price&lt;/th&gt;
+                    &lt;th&gt;Type&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;
+            &commat;foreach (var item in Model.Properties)
+            {
+                &lt;tr&gt;
+                    &lt;td&gt;&commat;Html.DisplayFor(modelItem => item.ID)&lt;/td&gt;
+                    &lt;td&gt;&commat;Html.DisplayFor(modelItem => item.Title)&lt;/td&gt;
+                    &lt;td&gt;&commat;Html.DisplayFor(modelItem => item.Price)&lt;/td&gt;
+                    &lt;td&gt;&commat;Html.DisplayFor(modelItem => item.For)&lt;/td&gt;
+                &lt;/tr&gt;
+            }
+            &lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+                        </pre>
+                        <h4>Output</h4>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.Properties)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.ID)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.For)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                            <div class="tab-pane fade" id="jquery">
+                                <h4>Authorization</h4>
+                                <pre class="prettyprint">
+    var tokenKey = 'accessToken';
+    var token = $.cookie(tokenKey);
+    var headers = {};
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+                                </pre>
+                                <h4>HTML</h4>
+                                <pre class="prettyprint">
+    &lt;div class=&quot;table-responsive&quot; id=&quot;propertyDataTable&quot;&gt;
+        &lt;table class=&quot;table table-bordered table-hover table-striped&quot;&gt;
+            &lt;thead&gt;
+                &lt;tr&gt;
+                    &lt;th&gt;ID&lt;/th&gt;
+                    &lt;th&gt;Title&lt;/th&gt;
+                    &lt;th&gt;Price&lt;/th&gt;
+                    &lt;th&gt;Type&lt;/th&gt;
+                &lt;/tr&gt;
+            &lt;/thead&gt;
+            &lt;tbody&gt;&lt;/tbody&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+                        </pre>
+                                <h4>AJAX</h4>
+                                <pre class="prettyprint">
+    var tokenKey = 'accessToken';
+    var token = $.cookie(tokenKey);
+    var headers = {};
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+
+   $.ajax({
+        url: location.protocol + "//" + location.host + '/api/Properties/GetProperties',
+        headers: headers,
+        dataType: 'json',
+        success: function (data) {
+            $.each(data, function(k, v){
+                var row = $("&lt;tr /&gt;")
+                $("#propertyDataTable tbody").append(row);
+                row.append($("&lt;td&gt;" + v.ID + "&lt;/td&gt;"));
+                row.append($("&lt;td&gt;" + v.Title + "&lt;/td&gt;"));
+                row.append($("&lt;td&gt;" + v.Price + "&lt;/td&gt;"));
+                row.append($("&lt;td&gt;" + v.For + "&lt;/td&gt;"));
+            });
+        }
+    });
+                        </pre>
+                                <h4>Output</h4>
+                                @*@Scripts.Render("~/bundles/knockout")*@
+                                @section scripts {
+                                <script type="text/javascript" src="~/Scripts/Array.IndexOf.js"></script>
+                                <script type="text/javascript" src="~/Scripts/jquery_cookies.js"></script>
+                                <script type="text/javascript">
+    var tokenKey = 'accessToken';
+    var token = $.cookie(tokenKey);
+    var headers = {};
+    if (token) {
+        headers.Authorization = 'Bearer ' + token;
+    }
+
+    $.ajax({
+        url: location.protocol + "//" + location.host + '/api/Properties/GetProperties',
+        headers: headers,
+        dataType: 'json',
+        success: function (data) {
+            $.each(data, function (k, v) {
+                var row = $("<tr />")
+                $("#propertyDataTable tbody").append(row);
+                row.append($("<td>PKU-" + v.ID + "</td>"));
+                row.append($("<td>" + v.Title + "</td>"));
+                row.append($("<td>" + v.Price + "</td>"));
+                row.append($("<td>" + v.For + "</td>"));
+            });
+        }
+    });
+
+    @*//function ViewModel() {
+    //    var self = this;
+
+    //    //var tokenKey = 'accessToken';
+
+    //    //self.result = ko.observable();
+    //    //self.user = ko.observable();
+
+    //    //self.registerEmail = ko.observable();
+    //    //self.registerPassword = ko.observable();
+    //    //self.registerPassword2 = ko.observable();
+
+    //    self.loginEmail = ko.observable();
+    //    self.loginPassword = ko.observable();
+
+    //    //function showError(jqXHR) {
+    //    //    self.result(jqXHR.status + ': ' + jqXHR.statusText);
+    //    //}
+
+    //    //self.callApi = function () {
+    //    //    self.result('');
+
+    //    //    var token = sessionStorage.getItem(tokenKey);
+    //    //    var headers = {};
+    //    //    if (token) {
+    //    //        headers.Authorization = 'Bearer ' + token;
+    //    //    }
+
+    //    //    $.ajax({
+    //    //        type: 'GET',
+    //    //        url: '/api/Properties/GetProperties',
+    //    //        headers: headers
+    //    //    }).done(function (data) {
+    //    //        self.result(data);
+    //    //        alert()
+    //    //    }).fail(showError);
+    //    //}
+
+    //    //self.register = function () {
+    //    //    self.result('');
+
+    //    //    var data = {
+    //    //        Email: self.registerEmail(),
+    //    //        Password: self.registerPassword(),
+    //    //        ConfirmPassword: self.registerPassword2()
+    //    //    };
+
+    //    //    $.ajax({
+    //    //        type: 'POST',
+    //    //        url: '/api/Account/Register',
+    //    //        contentType: 'application/json; charset=utf-8',
+    //    //        data: JSON.stringify(data)
+    //    //    }).done(function (data) {
+    //    //        self.result("Done!");
+    //    //    }).fail(showError);
+    //    //}
+
+    //    self.login = function () {
+    //        self.result('');
+
+    //        var loginData = {
+    //            grant_type: 'password',
+    //            username: self.loginEmail(),
+    //            password: self.loginPassword()
+    //        };
+
+    //        $.ajax({
+    //            type: 'POST',
+    //            url: '/Token',
+    //            data: loginData
+    //        }).done(function (data) {
+
+    //            self.user(data.userName);
+    //            // Cache the access token in session storage.
+    //            sessionStorage.setItem(tokenKey, data.access_token);
+    //            alert(sessionStorage.getItem(tokenKey));
+    //        }).fail(showError);
+    //    }
+
+    //    self.logout = function () {
+    //        self.user('');
+    //        sessionStorage.removeItem(tokenKey)
+    //    }
+    //}
+
+    //var app = new ViewModel();
+    //ko.applyBindings(app);*@
+                                    </script>
+                                }
+                                <div class="table-responsive" id="propertyDataTable">
+                                <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                <th>ID</th>
+                                <th>Title</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+                                <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+</div>
+        </div>
+        <!-- Test Drive Tabs -->
+
+    </div>
+    <div class="col-lg-4">
+        <!-- Developers -->
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Developers
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>City</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ControlDeskActiveDE.Developers)
+                                    {
+                                        <tr>
+                                            <td>@Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)</td>
+                                            <td>@Html.DisplayFor(modelItem => item.City)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js" type="text/javascript"></script>
+
+<link rel="Stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css" type="text/css">

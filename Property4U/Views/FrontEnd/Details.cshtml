@@ -1,0 +1,601 @@
+﻿@model Property4U.Models.DetailsPropertyPhotoViewModel
+@using PagedList.Mvc;
+
+@{
+    Layout = "~/Views/Shared/_PublicLayout.cshtml";
+}
+
+@{
+    IdentitySample.Models.ApplicationDbContext dbo = new IdentitySample.Models.ApplicationDbContext();
+    Property4U.Models.Configuration Settings = null;
+    if (dbo.Database.Exists())
+    {
+        try
+        {
+            //Settings = Property4U.Core.ConfigSys.GetSysInfo()/*.Result*/;
+            Settings = Property4U.Core.ConfigSys.Settings;
+        }
+        catch (Exception)
+        {
+            System.Diagnostics.Debug.WriteLine("Configuration - Error");
+        }
+    }
+    bool allow = (Settings == null) ? false : true;
+}
+
+@{
+    ViewBag.Title = Model.Property.Title;
+}
+
+@helper DisplayNameSys(string myfield, string type)
+{
+    dynamic field = null;
+    if (!myfield.IsEmpty()) { 
+    if (type.Equals("AreaUnits"))
+    {
+        field = Model.Property.AreaUnits.GetType().GetField(myfield);
+    }
+    else if (type.Equals("Status"))
+    {
+        field = Model.Property.Status.GetType().GetField(myfield);
+    }
+    else if (type.Equals("Condition"))
+    {
+        field = Model.Property.Condition.GetType().GetField(myfield);
+    }
+    else
+    {
+        field = Model.Property.Flooring.GetType().GetField(myfield);
+    }
+    if (field != null)
+    {
+        var display = ((System.ComponentModel.DataAnnotations.DisplayAttribute[])field.GetCustomAttributes(typeof(System.ComponentModel.DataAnnotations.DisplayAttribute), false)).FirstOrDefault();
+        if (display != null)
+        {
+            @display.Name
+        }
+        else
+        {
+            @myfield;
+        }
+    }
+    }
+}
+
+<link href="~/Content/bootstrap-rating.css" rel="stylesheet">
+
+<section id="advertisement">
+    <div class="container">
+        <div id="topad">
+            <a href="">
+                <img src="" alt="advertisement">
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="@Settings.ThemeColor">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm-3">
+                <div class="left-sidebar">
+                    <!-- Agent Profile -->
+                    <div class="profile-photo">
+                        @if (@Model.Property.Agent.ProfileImage != null)
+                        {
+                            <img class="img-responsive" src="~/Content/Uploads/Users/@Model.Property.Agent.ProfileImage" title="@Model.Property.Agent.FirstName @Model.Property.Agent.LastName" alt="Agent Profile Photo" />
+                        }
+                        else
+                        {
+                            <img class="img-responsive" src="~/Content/Uploads/Users/no-user-photo.jpg" title="@Model.Property.Agent.FirstName @Model.Property.Agent.LastName" alt="Agent Profile Photo" />
+                        }
+                        <ul class="list-group">
+                            <li class="badge margin-bottom">@Model.Property.Agent.FirstName @Model.Property.Agent.LastName</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-home"></span><span class="badge">@Model.AgentProperties.Count</span>Properties</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-bullhorn"></span><span class="badge">@Model.AgentBiddings.Count</span>Biddings</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-map-marker"></span>@Model.Property.Agent.City</li>
+                        </ul>
+                    </div><!-- Agent Profile -->
+
+                    <div class="shipping text-center">
+                        <!--shipping-->
+                        <div id="sidead">
+                            <a href="">
+                                <img src="" alt="advertisement">
+                            </a>
+                        </div>
+                    </div><!--/shipping-->
+
+                </div>
+            </div>
+            <div class="col-sm-9 padding-right">
+                <div class="product-details">
+                    <!--product-details-->
+                    <div class="col-sm-5">
+                        @{ int morePhotos = (Model.Photos != null) ? Model.Photos.Count() : 0; }
+                        @*@foreach (var item in Model.Photos)
+                            {*@
+                        <div class="view-product">
+                            @if (Model.Photos != null)
+                            {
+                                <img src="~/Content/Uploads/Properties/Medium/@Model.Photos.First().PhotoTitle" alt="@Model.Photos.First().PhotoTitle" />
+                                @*<h3>ZOOM</h3>*@
+                            }
+                            else
+                            {
+                                <img src="~/Content/Uploads/Properties/Medium/no-photo.jpg" title="@Html.DisplayFor(modelItem => Model.Property.Title)" alt="@Html.DisplayFor(modelItem => Model.Property.Title)" />
+                            }
+                        </div>
+
+                        @if (morePhotos > 1)
+                        {
+                            <div id="similar-product" class="carousel slide" data-ride="carousel">
+
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner">
+                                    @{int sectionItemPh = 1; bool sectionItemPhStart = true; bool sectionItemPhUL = true; }
+                                    @*@foreach (var item in Model.Photos.Skip(1))*@
+                                    @foreach (var item in Model.Photos)
+                                    {
+                                        if (sectionItemPh == 1)
+                                        {
+                                            string state = (sectionItemPhStart == true) ? "active" : "";
+
+                                            @:<div class="item @state">
+                                            if (sectionItemPhStart == true)
+                                            {
+                                                sectionItemPhStart = false;
+                                                @:<ul id="lightGallery">
+                                            }
+                                        }
+                                        <li data-src="@Url.Content("~/Content/Uploads/Properties/"+@item.PhotoTitle)"><img src="~/Content/Uploads/Properties/Small/@item.PhotoTitle" alt="@item.AltText" width="120" height="100" /></li>
+                                        if (sectionItemPh == 2)
+                                        {
+                                            sectionItemPh = 0;
+                                            if(sectionItemPhStart == false && sectionItemPhUL == true){
+                                                sectionItemPhUL = false;
+                                                @:</ul>
+                                            }
+                                        @:</div>
+
+                                        }
+
+                                        sectionItemPh++;
+                                    }
+
+                                </div>
+
+                                <!-- Controls -->
+                                <a class="left item-control" href="#similar-product" data-slide="prev">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                                <a class="right item-control" href="#similar-product" data-slide="next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-sm-7">
+                        <div class="product-information @Settings.ThemeColor">
+                            <!--/product-information-->
+                            <p class="newarrival  na-@Model.Property.Status">
+                                @if (Model.Property.Status.ToString().Equals("In_Discount"))
+                                {
+                                    @Model.Property.Discount @("% OFF")
+                                }
+                                else if (!Model.Property.Status.ToString().IsEmpty())
+                                {
+                                    @DisplayNameSys(Model.Property.Status.ToString(), "Status");
+                                }
+                            </p>
+                            <h2>@Model.Property.Title</h2>
+                            <p>Property ID: @Model.Property.ID</p>
+                            <input type="hidden" class="rating" data-start="1" data-stop="6" value="@Model.PropertyRating" readonly="readonly" />
+                            <span>
+                                <span>@Html.DisplayFor(modelItem => Model.Property.Price)</span>
+                                <a href="@Url.Action("Create", "Requests", new { PID = @Model.Property.ID })" class="btn btn-default cart @Settings.ThemeColor">
+                                    <i class="fa fa-user"></i>
+                                    Hire Agent
+                                </a>
+                            </span>
+                            <p><b>Availability:</b> @Model.Property.Availability</p>
+                            @if (!Model.Property.OfType.ToString().Equals("Land"))
+                            {
+                                <p><b>Condition:</b> 
+                                @if (!Model.Property.Condition.ToString().IsEmpty())
+                                {
+                                    @DisplayNameSys(Model.Property.Condition.ToString(), "Condition");
+                                }
+                                </p>
+                            }
+                            <p><b>Type:</b> @Model.SubType</p>
+                            <span>
+                                <span style="font-size:20px">
+                                    <a href="@Url.Action("Create", "Feedbacks", new { PID = Model.Property.ID, reportAbuse = true })"><i class="fa fa-flag default"></i></a>
+                                </span>
+                            </span>
+                                @*<a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>*@
+                        </div><!--/product-information-->
+                    </div>
+                </div><!--/product-details-->
+
+                <div class="category-tab @Settings.ThemeColor shop-details-tab">
+                    <!--category-tab-->
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs">
+                            <li><a href="#details" data-toggle="tab">Details</a></li>
+                            <li><a href="#map" data-toggle="tab">Map</a></li>
+                            <li><a href="#features" data-toggle="tab">Features</a></li>
+                            <li class="active"><a href="#reviews" data-toggle="tab">Reviews (@Model.Reviews.Count)</a></li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="details">
+                            <div class="container">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Type</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.SubType
+                                        </td>
+
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Property For</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.For
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Area</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.AreaMeasurement @DisplayNameSys(Model.Property.AreaUnits.ToString(), "AreaUnits")
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Dimensions (L x W)</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.AreaDiLength X @Model.Property.AreaDiWidth
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Seller</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.Seller
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Available From</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.PublishOn.ToString("dd/MM/yyyy")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Location</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @(Model.Property.Address.Number + "-" + Model.Property.Address.Block + " " + Model.Property.Address.Name + ", " + Model.Property.Address.Street + " " + Model.Property.Address.City)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Furnished</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.Furnished
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Car Spaces</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.CarSpaces
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Bedrooms</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.NumberOfRooms
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Construction Date</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.Build
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Baths</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.Baths
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Covered Area</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.CoveredAreaMeasurement @DisplayNameSys(Model.Property.CoveredAreaUnits.ToString(), "AreaUnits")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Kitchens</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.Kitchens
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Floor No</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.FloorNo
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Total Floors</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.Stories
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Drawing Rooms</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.DrawingRooms
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Flooring</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @DisplayNameSys(Model.Property.Flooring.ToString(), "Flooring")
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Dining Rooms</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.DiningRooms
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Store Rooms</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.StoreRooms
+                                        </td>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Living Rooms</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.LivingRooms
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="field-label col-xs-3 active">
+                                            <p>Servant Quarters</p>
+                                        </td>
+                                        <td class="col-md-3">
+                                            @Model.Property.ServantQuarters
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="map">
+                            <div id="map_canvas" style="width:100%; height:200px; margin-bottom:10px;" class="col-md-10"></div>
+                            <div class="container">
+                                <div class="row">
+                                    <p><b>Address</b></p>
+                                    <div class="col-md-4">
+                                        <p>
+                                            @(Model.Property.Address.Number + "-" + Model.Property.Address.Block + " " + Model.Property.Address.Name + ", " + Model.Property.Address.Street + " " + Model.Property.Address.City)
+                                        </p>
+                                        <p>
+                                            @(Model.Property.Address.State + " (" + Model.Property.Address.ZipCode + ") " + Model.Property.Address.Country)
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="features">
+                            <div class="col-sm-6 col-md-12">
+                                @foreach (var item in Model.Property.Features)
+                                {
+                                    <p class="col-md-6">
+                                        @item.Title
+                                    </p>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade active in @Settings.ThemeColor" id="reviews">
+                            @foreach (var item in Model.Reviews)
+                            {
+                                <div class="col-sm-12" style="padding-top: 20px; padding-bottom: 20px;">
+                                    <ul>
+                                        <li><a href=""><i class="fa fa-user"></i>@item.Review.Name</a></li>
+                                        <li><a href=""><i class="fa fa-clock-o"></i>@item.Review.ReviewOn.ToString("hh:mm tt")</a></li>
+                                        <li><a href=""><i class="fa fa-calendar-o"></i>@item.Review.ReviewOn.ToString("dd/MM/yyyy")</a></li>
+                                    </ul>
+                                    <p class="text-justify">@item.Review.Description</p>
+                                </div>
+                                foreach (var itemReply in item.Replies)
+                                {
+                                    <div class="col-md-12 col-sm-offset-1" style="background-color: #f8f8f8; padding-top: 20px; padding-bottom: 20px;">
+                                        <ul style="background-color: #f8f8f8">
+                                            <li><a href=""><i class="fa fa-user"></i>@itemReply.Agent.FirstName @itemReply.Agent.LastName</a></li>
+                                            <li><a href=""><i class="fa fa-clock-o"></i>@itemReply.ReplyOn.ToString("hh:mm tt")</a></li>
+                                            <li><a href=""><i class="fa fa-calendar-o"></i>@itemReply.ReplyOn.ToString("dd/MM/yyyy")</a></li>
+                                        </ul>
+                                        <p class="text-justify">@itemReply.Description</p>
+                                    </div>
+                                }
+                            }
+
+                            @Html.PagedListPager(Model.Reviews, page => Url.Action("Details",
+                                                                   new { page, PID = ViewBag.CurrentPID }))
+
+                            <div class=" col-sm-12">
+                                <p><b>Write Your Review</b></p>
+                                @* Sending HTML Form Data in ASP.NET Web API *@
+                                <div id="alerts"></div>
+                                <form id="propertyReview" method="post" action="/api/Reviews/PostReview" enctype="application/x-www-form-urlencoded">
+                                    <span>
+                                        <input name="PropertyID" type="hidden" value="@Model.Property.ID" />
+                                        <input name="Name" type="text" placeholder="Your Name" />
+                                        <input name="EmailAddress" type="email" placeholder="Email Address" />
+                                    </span>
+                                    <textarea name="Description"></textarea>
+                                    <b>Rating: </b> <input type="hidden" name="Rating" class="rating" id="rating" data-start="1" data-stop="6" />
+                                    <input name="ReviewOn" type="hidden" value="@DateTime.Now" />
+                                    <input name="IPAddress" type="hidden" value="@Request.UserHostAddress" />
+                                    <button type="submit" value="Submit" class="btn btn-default pull-right">
+                                        Submit
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div><!--/category-tab-->
+
+                <div class="recommended_items @Settings.ThemeColor">
+                    <!--recommended_items-->
+                    <h2 class="title @Settings.ThemeColor text-center">recommended properties</h2>
+
+                    <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
+
+                        <div class="carousel-inner">
+                            @{int sectionItem = 1; }
+                            @foreach (var item in Model.RelatedProperties)
+                            {
+
+                                if (sectionItem == 1 || sectionItem == 4)
+                                {
+                                    string state = (sectionItem == 1) ? "active" : "";
+
+                                    @:<div class="item @state">
+                                    }
+                                    <div class="col-sm-4">
+                                        <div class="product-image-wrapper">
+                                            <div class="single-products">
+                                                <div class="productinfo @Settings.ThemeColor text-center">
+                                                    @if (item.Photo != null)
+                                                    {
+                                                        <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Property.Title)" alt="@Html.DisplayFor(modelItem => item.Property.Title)" />
+                                                    }
+                                                    <h2>@Html.DisplayFor(modelItem => item.Property.Price)</h2>
+                                                    <p>@Html.DisplayFor(modelItem => item.Property.Title)</p>
+                                                    <a href="@Url.Action("Details", "FrontEnd", new { PID = @item.Property.ID })" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                if (sectionItem == 3 || sectionItem == 6)
+                                {
+                                    @:</div>
+
+
+                                }
+
+                                sectionItem++;
+
+                            }
+
+                        </div>
+                    </div>
+                    <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div><!--/recommended_items-->
+
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script type="text/javascript" src="~/Scripts/AdsScriptTopBar.js"></script>
+    <script type="text/javascript" src="~/Scripts/AdsScriptSideBar.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-rating.js"></script>
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript">
+        $("#propertyReview").submit(function () {
+            var jqxhr = $.post('/api/Reviews/PostReview', $('#propertyReview').serialize())
+                .success(function () {
+                    //var loc = jqxhr.getResponseHeader('Location');
+                    //var a = $('<a/>', { href: loc, text: loc });
+                    //$('#message').html(a);
+                    location.reload();
+                })
+                .error(function () {
+                    if (!$('.alert').hasClass("alert-danger")) {
+                        addAlert('Kindly provide complete details for review.');
+                    }
+                });
+            return false;
+        });
+        function addAlert(message) {
+            $('#alerts').append(
+                '<div class="alert alert-danger alert-dismissible" role="alert">' +
+                    '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>' +
+                '<strong>Error! </strong>' + message + '</div>'
+            );
+        }
+
+        $(document).ready(function() {
+             $("#lightGallery").lightGallery(); 
+        });
+
+
+        $(document).ready(function () {
+            initialize();
+        });
+
+        function initialize() {
+            var mapOptions = {
+                center: new google.maps.LatLng('@Model.Property.Address.Latitude', '@Model.Property.Address.Longitude'),
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map_canvas"),
+          mapOptions);
+            // create a marker
+            var propertyLat = '@Model.Property.Address.Latitude';
+            var propertyLong = '@Model.Property.Address.Longitude';
+            var latlng = new google.maps.LatLng(propertyLat, propertyLong);
+            var marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                title: '@Model.Property.Title'
+            });
+
+        }
+    </script>
+}
+
