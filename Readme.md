@@ -85,7 +85,7 @@ Property4U is an Open Source Enterprise Real Estate 2.0 solution completely equi
   - **Clean** and **Build Solution**.
   - Under **Build** menu > **Publish Property4U**.
   - Select **Custom** to create **Profile** by given name to it.
-  - **Publish Web > Publish Method **“FTP”.
+  - **Publish Web > Publish Method** “FTP”.
   - Fill **FTP Details** provided by hosting provider and select Validate.
   - After successful **Validation** select **Publish** and wait until it Uploading files using FTP.
   - Create **App_Data folder** in root of **File Manager** of **Control Panel** if missing **> Upload XMLDocument.xml** from project solution to App_Data. 
