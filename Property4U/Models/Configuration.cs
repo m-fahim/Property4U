@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,8 +10,10 @@ namespace Property4U.Models
 {
     public class Configuration
     {
+        [JsonIgnore]
         public int ID { get; set; }
 
+        [JsonIgnore]
         [Required]
         [Display(Name = "AdminID")]
         public string ConfigAdminID { get; set; }
@@ -97,12 +100,14 @@ namespace Property4U.Models
         [Display(Name = "Facebook AppId")]
         public string FacebookAppId { get; set; }
 
+        [JsonIgnore]
         [Display(Name = "Facebook AppSecret")]
         public string FacebookAppSecret { get; set; }
 
         [Display(Name = "Google ClientId")]
         public string GoogleClientId { get; set; }
 
+        [JsonIgnore]
         [Display(Name = "Google ClientSecret")]
         public string GoogleClientSecret { get; set; }
 

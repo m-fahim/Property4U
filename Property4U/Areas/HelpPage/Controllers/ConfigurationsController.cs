@@ -14,7 +14,6 @@ using Property4U.Models;
 
 namespace Property4U.Areas.HelpPage.Controllers
 {
-    [Authorize(Roles = "Developer, Admin")]
     public class ConfigurationsController : ApiController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -25,23 +24,28 @@ namespace Property4U.Areas.HelpPage.Controllers
         //    return db.Configurations;
         //}
 
-        //// GET: api/Configurations/5
-        //[ResponseType(typeof(Configuration))]
-        //public async Task<IHttpActionResult> GetConfiguration(int id)
-        //{
-        //    Configuration configuration = await db.Configurations.FindAsync(id);
-        //    if (configuration == null)
-        //    {
-        //        return NotFound();
-        //    }
+        /// <summary>
+        /// Authorize Roles - Admin, Agent, Member, Public
+        /// </summary>
 
-        //    return Ok(configuration);
-        //}
+        //// GET: api/Configurations/5
+        [ResponseType(typeof(Configuration))]
+        public async Task<IHttpActionResult> GetConfiguration()
+        {
+            Configuration configuration = await db.Configurations.FindAsync(1);
+            if (configuration == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(configuration);
+        }
 
         /// <summary>
         /// Authorize Roles - Admin
         /// </summary>
 
+        [Authorize(Roles = "Developer, Admin")]
         // PUT: api/Configurations/5
         [ResponseType(typeof(void))]
         public async Task<IHttpActionResult> PutConfiguration(int id, Configuration configuration)
@@ -81,6 +85,7 @@ namespace Property4U.Areas.HelpPage.Controllers
         /// Authorize Roles - Admin
         /// </summary>
 
+        [Authorize(Roles = "Developer, Admin")]
         // POST: api/Configurations
         [ResponseType(typeof(Configuration))]
         public async Task<IHttpActionResult> PostConfiguration(Configuration configuration)

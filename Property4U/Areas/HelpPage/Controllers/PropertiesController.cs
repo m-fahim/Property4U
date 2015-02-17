@@ -12,6 +12,7 @@ using System.Web.Http.Description;
 using IdentitySample.Models;
 using Property4U.Models;
 using Microsoft.AspNet.Identity;
+using System.Data.Entity.Spatial;
 
 namespace Property4U.Areas.HelpPage.Controllers
 {
@@ -173,6 +174,52 @@ namespace Property4U.Areas.HelpPage.Controllers
             // }
 
             return Ok(property);
+        }
+
+        /// <summary>
+        /// Authorize Roles - Member
+        /// </summary>
+
+        [Authorize(Roles = "Developer, Member")]
+        // GET: api/GetPropertiesInRange - iOS APP P4U
+        public IEnumerable<Property> GetPropertiesInRange(int min, int max)
+        {
+            return db.Properties.Where(p => p.Price <= max || p.Price >= min).ToList();
+        }
+
+        /// <summary>
+        /// Authorize Roles - Member
+        /// </summary>
+
+        [Authorize(Roles = "Developer, Member")]
+        // GET: api/FindNearByProperties - iOS APP P4U
+        public IEnumerable<NearByAddresses> GetFindNearByProperties(double longitude, double latitude)
+        {
+            DbGeography searchLocation = DbGeography.FromText(String.Format("POINT({0} {1})", longitude, latitude));
+
+            return
+                (from location in db.Addresses
+                 where longitude != null && latitude != null
+                 select new NearByAddresses
+                 {
+                     ID = location.ID,
+                     Name = location.Name,
+                     Number = location.Number,
+                     Floor = location.Floor,
+                     AreaName = location.AreaName,
+                     Block = location.Block,
+                     Street = location.Street,
+                     City = location.City,
+                     State = location.State,
+                     Country = location.Country,
+                     PostalCode = location.PostalCode,
+                     ZipCode = location.ZipCode,
+                     Latitude = location.Latitude,
+                     Longitude = location.Longitude,
+                     Distance = searchLocation.Distance(
+                          DbGeography.FromText("POINT(" + location.Longitude + " " + location.Latitude + ")"))
+                 })
+                .OrderBy(location => location.Distance).ToList();
         }
 
         /// <summary>

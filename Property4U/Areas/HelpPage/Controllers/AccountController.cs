@@ -58,6 +58,33 @@ namespace Property4U.Areas.HelpPage.Controllers
         }
 
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
+       
+        /// <summary>
+        /// Authorize Roles - Admin, Agent, Member
+        /// </summary>
+
+        [Authorize(Roles = "Developer, Admin, Agent, Member")]
+        // GET api/Account/UserRoles - iOS APP P4U - User Roles
+        [Route("UserRoles")]
+        public IEnumerable<ApplicationRole> GetUserRoles(string UserID)
+        {
+            List<IdentityUserRole> usersRoles = new List<IdentityUserRole>();
+            List<ApplicationRole> usersRolesTile = new List<ApplicationRole>();
+            // Replace IdentityRole with Custom ApplicationRole - P4U
+            var roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(new ApplicationDbContext()));
+            // Replace IdentityRole with Custom ApplicationRole - P4U
+            var user = UserManager.FindById(UserID);
+            if (user != null)
+            {
+                usersRoles = user.Roles.ToList();
+                foreach (var role in user.Roles.ToList())
+                {
+                    usersRolesTile.Add(roleManager.FindById(role.RoleId));
+                }
+            }
+            // Use AsEnumerable() to avoid null exception
+            return usersRolesTile.ToList();
+        }
 
         /// <summary>
         /// Authorize Roles - Admin
