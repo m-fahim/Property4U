@@ -66,8 +66,10 @@ namespace Property4U.Areas.HelpPage.Controllers
         [Authorize(Roles = "Developer, Admin, Agent, Member")]
         // GET api/Account/UserRoles - iOS APP P4U - User Roles
         [Route("UserRoles")]
-        public IEnumerable<ApplicationRole> GetUserRoles(string UserID)
+        public IEnumerable<ApplicationRole> GetUserRoles()
         {
+            // Get API Request UserID from Identity
+            string UserID = User.Identity.GetUserId();
             List<IdentityUserRole> usersRoles = new List<IdentityUserRole>();
             List<ApplicationRole> usersRolesTile = new List<ApplicationRole>();
             // Replace IdentityRole with Custom ApplicationRole - P4U
