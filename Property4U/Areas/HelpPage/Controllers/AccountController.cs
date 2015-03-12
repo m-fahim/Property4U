@@ -459,6 +459,9 @@ namespace Property4U.Areas.HelpPage.Controllers
                 return GetErrorResult(result);
             }
 
+            // Every Register API User is "Member"
+            UserManager.AddToRole(user.Id, "Member");
+
             return Ok();
         }
 
