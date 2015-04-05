@@ -1,5 +1,5 @@
 # Property4U
-Property4U is an Open Source Enterprise Real Estate 2.0 solution completely equipped with Buying, Selling, Renting and Bidding features. It also provides Developer APIs with complete documentation. 
+Property4U is an Open Source Enterprise Real Estate 2.0 solution. 
 
 ##Introduction:
 Property4U is an Open Source Enterprise Real Estate 2.0 solution completely equipped with Buying, Selling, Renting and Bidding features. It also provides Developer APIs with complete documentation. 
