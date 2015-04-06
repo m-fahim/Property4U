@@ -60,22 +60,22 @@ namespace Property4U.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ID,BiddingID,MemberID,Title,Description,Price,BidOn,BidStatus,LastEdit")] Bid bid)
+        public async Task<ActionResult> Create([Bind(Include = "ID,BiddingID,MemberID,Title,Description,Price,BidOn,BidStatus,LastEdit")] Bid bidO)
         {
             if (ModelState.IsValid)
             {
-                db.Bids.Add(bid);
+                db.Bids.Add(bidO);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BiddingIDList = new SelectList(await db.Biddings.Where(b => b.BiddingStatus.ToString().Equals("Active")).ToListAsync(), "ID", "ID", bid.BiddingID);
+            ViewBag.BiddingIDList = new SelectList(await db.Biddings.Where(b => b.BiddingStatus.ToString().Equals("Active")).ToListAsync(), "ID", "ID", bidO.BiddingID);
             strCurrentUserId = User.Identity.GetUserId();
             var ownerMember = await db.Users.Where(d => d.Id == strCurrentUserId).ToListAsync();
-            ViewBag.MemberIDList = new SelectList(ownerMember, "Id", "Id", bid.MemberID);
+            ViewBag.MemberIDList = new SelectList(ownerMember, "Id", "Id", bidO.MemberID);
             ViewBag.BidOn = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff tt");
             ViewBag.BidStatus = "Process";
-            return View(bid);
+            return View(bidO);
         }
 
         //// GET: Bids/Edit/5
