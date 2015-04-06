@@ -350,9 +350,9 @@
 
     @{
         string role = null;
-        if(User.IsInRole("Admin")){
+        if(User.IsInRole("Admin") || User.IsInRole("DemoUAD")){
             role = "AD";
-        }else if (User.IsInRole("Agent")){
+        }else if (User.IsInRole("Agent") || User.IsInRole("DemoUAG")){
             role = "AG";
         }else {
             role = "ME";
@@ -382,16 +382,16 @@
 
                 $("#nick").val("@if (User.Identity.Name.Contains('@'))
                 { @(User.Identity.Name.Substring(0, User.Identity.Name.LastIndexOf('@'))); }");
-            startChatHub();
-            $(this).text("Sign Out");
-        }
-        else {
-        // Remove # from URL
+                startChatHub();
+                $(this).text("Sign Out");
+            }
+            else {
+                // Remove # from URL
                 window.location.href.substr(0, window.location.href.indexOf('#'));
-        location.reload();
-        //$(this).text("Sign In");
-    }
-    });
+                location.reload();
+                //$(this).text("Sign In");
+            }
+        });
     });
 
     function startChatHub() {
@@ -448,8 +448,8 @@
             $('#searchinput').val('');
             $('#UsernameSearch').val('');
             // Disable user to conversate
-            $('#message').attr('disabled','disabled');
-            $('#btnsend').attr('disabled','disabled');
+            $('#message').attr('disabled', 'disabled');
+            $('#btnsend').attr('disabled', 'disabled');
         }
 
         // Start the connection.
@@ -476,10 +476,10 @@
         return name.match(/'([^']+)'/)[1];
     }
     function getUserRoleClass(role) {
-        switch (role){
-            case "AD" :
+        switch (role) {
+            case "AD":
                 return "danger";
-            case "AG" :
+            case "AG":
                 return "warning";
             case "ME":
                 return "success";

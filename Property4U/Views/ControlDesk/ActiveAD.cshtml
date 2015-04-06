@@ -450,9 +450,9 @@
     
     @{
         string role = null;
-        if(User.IsInRole("Admin")){
+        if(User.IsInRole("Admin") || User.IsInRole("DemoUAD")){
             role = "AD";
-        }else if (User.IsInRole("Agent")){
+        }else if (User.IsInRole("Agent") || User.IsInRole("DemoUAG")){
             role = "AG";
         }else {
             role = "ME";
