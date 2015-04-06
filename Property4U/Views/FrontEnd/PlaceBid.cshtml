@@ -212,41 +212,43 @@
                                         <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 
                                             <div class="carousel-inner">
-                                                @{int sectionItem = 1; }
+                                                @{int sectionItem = 1, sectionItemC = 1; }
                                                 @foreach (var item in Model.RelatedBiddings)
                                                 {
 
-                                                    if (sectionItem == 1 || sectionItem == 4)
+                                                    if (sectionItemC == 1)
                                                     {
                                                         string state = (sectionItem == 1) ? "active" : "";
 
                                                         @:<div class="item @state">
-                                    }
-                                    <div class="col-sm-4">
-                                        <div class="product-image-wrapper">
-                                            <div class="single-products">
-                                                <div class="productinfo @Settings.ThemeColor text-center">
-                                                    @if (item.Photo != null)
-                                                    {
-                                                        <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
-                                                    }
-                                                    else
-                                                    {
-                                                        <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Bidding.Title)" />
-                                                    }
-                                                    <h2>@Html.DisplayFor(modelItem => item.Bidding.Property.Price)</h2>
-                                                    <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
-                                                    <a href="@Url.Action("PlaceBid", "FrontEnd", new { BID = @item.Bidding.ID })" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Hire Agent</a>
+                                                }
+                                                <div class="col-sm-4">
+                                                    <div class="product-image-wrapper">
+                                                        <div class="single-products">
+                                                            <div class="productinfo @Settings.ThemeColor text-center">
+                                                                @if (item.Photo != null)
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" title="@Html.DisplayFor(modelItem => item.Photo.PhotoTitle)" alt="@Html.DisplayFor(modelItem => item.Photo.AltText)" />
+                                                                }
+                                                                else
+                                                                {
+                                                                    <img src="~/Content/Uploads/Properties/Small/no-photo.jpg" title="@Html.DisplayFor(modelItem => item.Bidding.Title)" alt="@Html.DisplayFor(modelItem => item.Bidding.Title)" />
+                                                                }
+                                                                <h2>@Html.DisplayFor(modelItem => item.Bidding.Property.Price)</h2>
+                                                                <p>@Html.DisplayFor(modelItem => item.Bidding.Title)</p>
+                                                                <a href="@Url.Action("PlaceBid", "FrontEnd", new { BID = @item.Bidding.ID })" class="btn btn-default add-to-cart"><i class="fa fa-user"></i>Place Bid</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                                    if (sectionItem == 3 || sectionItem == 6)
+                                                    if (sectionItemC == 3)
                                                     {
                                                         @:</div>
+                                                        sectionItemC = 0;
                                                     }
 
+                                                    sectionItemC++;
                                                     sectionItem++;
 
                                                 }
@@ -254,12 +256,14 @@
                                             </div>
 
                                         </div>
-                                        <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                        <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
+                                        @if (Model.RelatedBiddings.Count() > 3) {
+                                            <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                                                <i class="fa fa-angle-left"></i>
+                                            </a>
+                                            <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                                                <i class="fa fa-angle-right"></i>
+                                            </a>
+                                        }
                                     </div><!--/recommended_items-->
                }
             </div>

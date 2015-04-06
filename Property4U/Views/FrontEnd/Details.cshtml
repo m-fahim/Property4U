@@ -93,7 +93,14 @@
                         <ul class="list-group">
                             <li class="badge margin-bottom">@Model.Property.Agent.FirstName @Model.Property.Agent.LastName</li>
                             <li class="list-group-item"><span class="glyphicon glyphicon-home"></span><span class="badge">@Model.AgentProperties.Count</span>Properties</li>
-                            <li class="list-group-item"><span class="glyphicon glyphicon-bullhorn"></span><span class="badge">@Model.AgentBiddings.Count</span>Biddings</li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-bullhorn"></span><span class="badge">
+                                @if (@Model.AgentBiddings != null)
+                                {
+                                    @Model.AgentBiddings.Count;
+                                }else { 
+                                    @("0");
+                                }
+                            </span>Biddings</li>
                             <li class="list-group-item"><span class="glyphicon glyphicon-map-marker"></span>@Model.Property.Agent.City</li>
                         </ul>
                     </div><!-- Agent Profile -->
@@ -483,13 +490,13 @@
                     <div id="recommended-item-carousel" class="carousel slide" data-ride="carousel">
 
                         <div class="carousel-inner">
-                            @{int sectionItem = 1; }
+                            @{int sectionItem = 1, sectionItemC = 1; }
                             @foreach (var item in Model.RelatedProperties)
                             {
 
-                                if (sectionItem == 1 || sectionItem == 4)
+                                if (sectionItemC == 1)
                                 {
-                                    string state = (sectionItem == 1) ? "active" : "";
+                                    string state = (sectionItem == 1 ) ? "active" : "";
 
                                     @:<div class="item @state">
                                     }
@@ -513,25 +520,28 @@
                                         </div>
                                     </div>
 
-                                if (sectionItem == 3 || sectionItem == 6)
+                                
+                                if (sectionItemC == 3 )
                                 {
                                     @:</div>
-
+                                    sectionItemC = 0;
 
                                 }
 
+                                sectionItemC++;
                                 sectionItem++;
-
                             }
 
                         </div>
                     </div>
-                    <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
-                        <i class="fa fa-angle-left"></i>
-                    </a>
-                    <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
-                        <i class="fa fa-angle-right"></i>
-                    </a>
+                    @if (Model.RelatedProperties.Count() > 3) { 
+                        <a class="left recommended-item-control" href="#recommended-item-carousel" data-slide="prev">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a class="right recommended-item-control" href="#recommended-item-carousel" data-slide="next">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+                    }
                 </div><!--/recommended_items-->
 
             </div>
