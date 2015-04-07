@@ -329,6 +329,7 @@
     <Compile Include="Models\HomeViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\NearByAddresses.cs" />
     <Compile Include="Models\ObjectCon.cs" />
     <Compile Include="Models\OfSubType.cs" />
     <Compile Include="Models\OfType.cs" />

@@ -18,6 +18,11 @@
             or you can provide the samples for the requests/responses.
             </summary>
         </member>
+        <member name="M:Property4U.Areas.HelpPage.Controllers.AccountController.GetUserRoles">
+            <summary>
+            Authorize Roles - Admin, Agent, Member
+            </summary>
+        </member>
         <member name="M:Property4U.Areas.HelpPage.Controllers.AccountController.GetRegisterUsers">
             <summary>
             Authorize Roles - Admin
@@ -151,6 +156,11 @@
         <member name="M:Property4U.Areas.HelpPage.Controllers.BidsController.DeleteBid(System.Int32)">
             <summary>
             Authorize Roles - Member
+            </summary>
+        </member>
+        <member name="M:Property4U.Areas.HelpPage.Controllers.ConfigurationsController.GetConfiguration">
+            <summary>
+            Authorize Roles - Admin, Agent, Member, Public
             </summary>
         </member>
         <member name="M:Property4U.Areas.HelpPage.Controllers.ConfigurationsController.PutConfiguration(System.Int32,Property4U.Models.Configuration)">
@@ -387,6 +397,16 @@
             <summary>
             Authorize Roles - Admin
             </summary> 
+        </member>
+        <member name="M:Property4U.Areas.HelpPage.Controllers.PropertiesController.GetPropertiesInRange(System.Int32,System.Int32)">
+            <summary>
+            Authorize Roles - Member
+            </summary>
+        </member>
+        <member name="M:Property4U.Areas.HelpPage.Controllers.PropertiesController.GetFindNearByProperties(System.Double,System.Double)">
+            <summary>
+            Authorize Roles - Member
+            </summary>
         </member>
         <member name="M:Property4U.Areas.HelpPage.Controllers.PropertiesController.GetProperty(System.Int32)">
             <summary>
